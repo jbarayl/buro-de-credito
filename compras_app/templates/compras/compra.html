@@ -22,10 +22,15 @@
 <script src='{{STATIC_URL}}js/jquery.formset.js'></script>
 <script type="text/javascript">
 $(function() {
+  
+  $('#id_doctosIn_table tbody tr input[name$=fecha]').attr('readonly', 'readonly'); 
+  $('input[name=fecha]').datetimepicker({ dateFormat: 'dd/mm/yy',});
+  $('input[name$=fecha_limite]').datetimepicker({ dateFormat: 'dd/mm/yy',});
+  
   $('#id_doctosIn_table tbody tr').formset({
     prefix: '{{ formset.prefix }}',
     addCssClass:'btn btn-success',
-    addText:'Nuevo Articulo',
+    addText:'Nuevo Pago',
     deleteText:'',
   });
 });
@@ -34,6 +39,7 @@ $(function() {
 {% endblock %}
 {% block breadcrumb %}{{ block.super }} <a href="/">Compras</a> > Compra{% endblock %}
 {% block content %}
+
 <form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>
   {% csrf_token %}
   <div class="form-actions">
@@ -42,29 +48,21 @@ $(function() {
     {{ compra_form.errors }}
   
    <div class="control-group">
-    <label class="control-label" for="id_folio">Cliente</label>
+    <label class="control-label" for="id_folio"></label>
     <div class="controls">
-      {{ compra_form.cliente }}
-      {{ compra_form.tipo_prestamo }}
-      {{ compra_form.estado }} 
+      Cliente {{ compra_form.cliente }} Tipo {{ compra_form.tipo_prestamo }} Estado {{ compra_form.estado }} 
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="id_descripcion">Fecha</label>
+    <label class="control-label" for="id_descripcion"></label>
     <div class="controls">
-      {{ compra_form.fecha }} 
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="id_concepto">Fecha Limite</label>
-    <div class="controls">
-      {{ compra_form.fecha_limite }}
+      Fecha Inicio {{ compra_form.fecha }} Limite {{ compra_form.fecha_limite }}
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="id_almacen">Sucursal</label>
     <div class="controls">
-      {{ compra_form.sucursal }}
+      Sucursal {{ compra_form.sucursal }} Cantidad Total {{ compra_form.cantidad }} Debe {{ compra_form.adeudo }}
     </div>
   </div>
   {{ formset.total_form_count }} Pagos
@@ -86,7 +84,8 @@ $(function() {
           <tr id="{{ form.prefix }}-row" class="form-container">
             {{ form.errors }}
             <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-            	{{ form.fecha }}</td>
+              {{ form.fecha }}
+            </td>
             <td>{{ form.cantidad }}
               {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
             </td>

@@ -55,7 +55,7 @@ class Compra(models.Model):
 class Pago(models.Model):
 	Compra = models.ForeignKey(Compra, on_delete=models.SET_NULL, blank=True, null=True)
 	fecha = models.DateTimeField(default=datetime.now(),blank=True)
-	cantidad = models.DecimalField(default=0, blank=True, null=True, max_digits=18, decimal_places=2)
+	cantidad = models.DecimalField(default=0, max_digits=18, decimal_places=2)
 	descripcion = models.CharField(max_length=100,blank= True, null =True)
 	sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, blank=True, null=True)
 	

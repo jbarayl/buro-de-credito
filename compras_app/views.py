@@ -63,7 +63,7 @@ def index(request):
 	compras = Compra.objects.filter(
 		Q(cliente__nombre__icontains=filtro)| Q(sucursal__nombre__icontains=filtro) | Q(estado=filtro)
 		)
-	c = {'compras':compras,'filtro':filtro}
+	c = {'compras':compras,'filtro':filtro,}
   	return render_to_response('index.html', c, context_instance=RequestContext(request))
 
 
@@ -89,15 +89,23 @@ def compra_manageView(request, id = None, template_name='compras/compra.html'):
 		if Compra_form.is_valid() and pagosCompra_formset.is_valid():
 			compra_O = Compra_form.save(commit = False)
 
-			compra_O.save()
+			total = compra_O.cantidad
+			adeudo = compra_O.cantidad
 
 			#GUARDA ARTICULOS DE INVENTARIO FISICO
 			for pago_form in pagosCompra_formset:
 				pago = pago_form.save(commit = False)
+				
+				if not pagosCompra_formset._should_delete_form(pago_form):
+					adeudo -= pago.cantidad 
+
 				#PARA CREAR UNO NUEVO
 				if not pago.id:
 					pago.Compra = compra_O
+					pago.fecha = datetime.datetime.now()
 			
+			compra_O.adeudo = adeudo
+			compra_O.save()
 			pagosCompra_formset.save()
 			return HttpResponseRedirect('/')
 	else:
@@ -107,3 +115,37 @@ def compra_manageView(request, id = None, template_name='compras/compra.html'):
 	c = {'compra_form': Compra_form, 'formset': pagosCompra_formset,}
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def cliente_manageView(request, id = None, template_name='clientes/cliente.html'):
+	if id:
+		cliente = get_object_or_404(Cliente, pk=id)
+	else:
+		cliente = Cliente()
+
+	if request.method == 'POST':
+		Cliente_form = ClienteManageForm(request.POST, request.FILES, instance=cliente)
+
+		if Cliente_form.is_valid():
+			cliente_O = Cliente_form.save(commit = False)
+
+			cliente_O.save()
+			
+			return HttpResponseRedirect('/')
+	else:
+		Cliente_form = ClienteManageForm(instance=cliente)
+		
+	c = {'cliente_form': Cliente_form, }
+
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def clientes_View(request, template_name='clientes/clientes.html'):
+	try: 
+		filtro = request.GET['filtro']
+	except:
+		filtro = ''
+
+	clientes = Cliente.objects.filter(nombre__icontains=filtro)
+	c = {'clientes':clientes,'filtro':filtro,}
+  	return render_to_response(template_name, c, context_instance=RequestContext(request))
