@@ -128,6 +128,16 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 
 		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
+			clientesIguales = Cliente.objects
+			.filter(dir_ciudad  	= 	cliente_O.dir_ciudad)
+			.filter(codigo_postal 	= 	cliente_O.codigo_postal)
+			.filter(dir_colonia		=	cliente_O.dir_colonia)
+			.filter(dir_calle		=	cliente_O.dir_calle)
+			.filter(dir_poblacion	=	cliente_O.dir_poblacion)
+			.filter(
+				Q(dir_no_exterior	=	cliente_O.dir_no_exterior) |
+				Q(dir_no_interior	=	cliente_O.dir_no_interior) |
+				)
 
 			cliente_O.save()
 			

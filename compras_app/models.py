@@ -17,9 +17,16 @@ class Cliente(models.Model):
 	nombre = models.CharField(max_length=40)
 	edad = models.CharField(max_length=3)
 	#DIRECCION
-	direccion = models.CharField(max_length=60)
+	dir_ciudad = models.ForeignKey('cities_light.city', null=True, blank=True)
 	codigo_postal = models.CharField(max_length=5)
-	
+	#Domicilio
+	dir_calle = models.CharField(max_length=100)
+	dir_no_exterior = models.CharField(max_length=10)
+	dir_no_interior = models.CharField(max_length=10)
+	dir_colonia = models.CharField(max_length=100)
+	dir_poblacion = models.CharField(max_length=100)
+	dir_referencia = models.CharField(max_length=100)
+
 	telefono = models.CharField(max_length=10)
 
 	ocupacion = models.CharField(max_length=30)
