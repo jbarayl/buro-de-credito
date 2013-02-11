@@ -2,8 +2,12 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
+#MODELOS Y FORMULARIOS DEL PROYECTO
 from models import *
 from forms import *
+#MODELOS DE EL PROYECTO DE CITIES_LIGHT
+from cities_light.models import City
+
 import datetime, time
 from django.db.models import Q
 
@@ -69,7 +73,7 @@ def index(request):
 
 ##########################################
 ## 										##
-##               COMPRAS  			    ##
+##               COMPRA          	    ##
 ##										##
 ##########################################
 
@@ -116,6 +120,12 @@ def compra_manageView(request, id = None, template_name='compras/compra.html'):
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
+##########################################
+## 										##
+##               CLIENTE			    ##
+##										##
+##########################################
+
 @login_required(login_url='/login/')
 def cliente_manageView(request, id = None, template_name='clientes/cliente.html'):
 	if id:
@@ -128,16 +138,7 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 
 		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
-			clientesIguales = Cliente.objects
-			.filter(dir_ciudad  	= 	cliente_O.dir_ciudad)
-			.filter(codigo_postal 	= 	cliente_O.codigo_postal)
-			.filter(dir_colonia		=	cliente_O.dir_colonia)
-			.filter(dir_calle		=	cliente_O.dir_calle)
-			.filter(dir_poblacion	=	cliente_O.dir_poblacion)
-			.filter(
-				Q(dir_no_exterior	=	cliente_O.dir_no_exterior) |
-				Q(dir_no_interior	=	cliente_O.dir_no_interior) |
-				)
+			clientesIguales = Cliente.all
 
 			cliente_O.save()
 			
@@ -158,4 +159,42 @@ def clientes_View(request, template_name='clientes/clientes.html'):
 
 	clientes = Cliente.objects.filter(nombre__icontains=filtro)
 	c = {'clientes':clientes,'filtro':filtro,}
+  	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+##########################################
+## 										##
+##               CIUDAD  			    ##
+##										##
+##########################################
+
+@login_required(login_url='/login/')
+def ciudad_manageView(request, id = None, template_name='ciudades/ciudad.html'):
+	if id:
+		ciudad = get_object_or_404(City, pk=id)
+	else:
+		ciudad = City()
+
+	if request.method == 'POST':
+		Ciudad_form = CiudadManageForm(request.POST, request.FILES, instance=ciudad)
+
+		if Ciudad_form.is_valid():
+			ciudad_O.save()
+			
+			return HttpResponseRedirect('/')
+	else:
+		Ciudad_form = CiudadManageForm(instance=ciudad)
+		
+	c = {'ciudad_form': Ciudad_form, }
+
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def ciudades_View(request, template_name='ciudades/ciudades.html'):
+	try: 
+		filtro = request.GET['filtro']
+	except:
+		filtro = ''
+
+	ciudades = City.objects.all()
+	c = {'ciudades':ciudades,'filtro':filtro,'msg':ciudades.count}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
