@@ -27,6 +27,9 @@ $(function() {
   $('input[name=fecha]').datetimepicker({ dateFormat: 'dd/mm/yy',});
   $('input[name$=fecha_limite]').datetimepicker({ dateFormat: 'dd/mm/yy',});
   
+  $('input[name$=cantidad]').addClass('span1');
+  $('input[name$=adeudo]').addClass('span1');
+// .attr('text-align','left');
   $('#id_doctosIn_table tbody tr').formset({
     prefix: '{{ formset.prefix }}',
     addCssClass:'btn btn-success',
@@ -62,7 +65,19 @@ $(function() {
   <div class="control-group">
     <label class="control-label" for="id_almacen">Sucursal</label>
     <div class="controls">
-      Sucursal {{ compra_form.sucursal }} Cantidad Total {{ compra_form.cantidad }} Debe {{ compra_form.adeudo }}
+      Sucursal {{ compra_form.sucursal }} 
+      <div class="input-prepend input-append">
+        Cantidad Total 
+        <span class="add-on">$</span>
+        {{ compra_form.cantidad }}
+        <span class="add-on">.00</span>
+      </div> 
+       <div class="input-prepend input-append">
+        Debe 
+        <span class="add-on">$</span>
+        {{ compra_form.adeudo }}
+        <span class="add-on">.00</span>
+      </div>
     </div>
   </div>
   {{ formset.total_form_count }} Pagos
@@ -86,7 +101,12 @@ $(function() {
             <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}
               {{ form.fecha }}
             </td>
-            <td>{{ form.cantidad }}
+            <td>
+              <div class="input-prepend input-append">
+                <span class="add-on">$</span>
+                {{ form.cantidad }}
+                <span class="add-on">.00</span>
+              </div>
               {% for fld in form.hidden_fields %}{{ fld }}{% endfor %}
             </td>
             <td>{{ form.descripcion }}</td>

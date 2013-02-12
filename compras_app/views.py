@@ -133,16 +133,21 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 	else:
 		cliente = Cliente()
 
+	msg = '' 
 	if request.method == 'POST':
 		Cliente_form = ClienteManageForm(request.POST, request.FILES, instance=cliente)
 
 		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
-			clientesIguales = Cliente.all
+			clientesIguales = Cliente.objects.filter(city = cliente_O.city).filter(codigo_postal 	= 	cliente_O.codigo_postal).filter(dir_colonia		=	cliente_O.dir_colonia).filter(dir_calle		=	cliente_O.dir_calle).filter(dir_poblacion	=	cliente_O.dir_poblacion)
 
-			cliente_O.save()
+			if clientesIguales.count() > 1:
+				msg = 'Ya existe otro cliente con la misma direccion porfavor revisa bien los datos!'
+			else:
+				cliente_O.save()
 			
-			return HttpResponseRedirect('/')
+			c = {'cliente_form': Cliente_form, 'msg':msg}
+			return render_to_response(template_name, c, context_instance=RequestContext(request))
 	else:
 		Cliente_form = ClienteManageForm(instance=cliente)
 		
@@ -161,6 +166,13 @@ def clientes_View(request, template_name='clientes/clientes.html'):
 	c = {'clientes':clientes,'filtro':filtro,}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+def clientes_deleteView(request, id = None, template_name='clientes/clientes.html'):
+	cliente = get_object_or_404(Cliente, pk=id)
+	cliente.delete()
+
+	return HttpResponseRedirect('/clientes/')
+
 ##########################################
 ## 										##
 ##               CIUDAD  			    ##
@@ -178,9 +190,9 @@ def ciudad_manageView(request, id = None, template_name='ciudades/ciudad.html'):
 		Ciudad_form = CiudadManageForm(request.POST, request.FILES, instance=ciudad)
 
 		if Ciudad_form.is_valid():
-			ciudad_O.save()
+			Ciudad_form.save()
 			
-			return HttpResponseRedirect('/')
+			return HttpResponseRedirect('/ciudades/')
 	else:
 		Ciudad_form = CiudadManageForm(instance=ciudad)
 		
@@ -194,7 +206,20 @@ def ciudades_View(request, template_name='ciudades/ciudades.html'):
 		filtro = request.GET['filtro']
 	except:
 		filtro = ''
+	ciudades_list = City.objects.filter(name__icontains=filtro).filter(country__name='Mexico')
 
-	ciudades = City.objects.all()
+	paginator = Paginator(ciudades_list, 20) # Muestra 5 inventarios por pagina
+	page = request.GET.get('page')
+
+	#####PARA PAGINACION##############
+	try:
+		ciudades = paginator.page(page)
+	except PageNotAnInteger:
+	    # If page is not an integer, deliver first page.
+	    ciudades = paginator.page(1)
+	except EmptyPage:
+	    # If page is out of range (e.g. 9999), deliver last page of results.
+	    ciudades = paginator.page(paginator.num_pages)
+
 	c = {'ciudades':ciudades,'filtro':filtro,'msg':ciudades.count}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))

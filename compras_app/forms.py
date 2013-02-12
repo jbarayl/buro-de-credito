@@ -27,6 +27,14 @@ class PagoManageForm(forms.ModelForm):
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
 		model = City
+		exclude = (
+			'latitude',
+			'longitude',
+			'alternate_names',
+			'geoname_id',
+			'name_ascii',
+			)
+
 
 def PagosCompra_formset(form, formset = BaseInlineFormSet, **kwargs):
 	return inlineformset_factory(Compra, Pago, form, formset, **kwargs)

@@ -7,6 +7,13 @@
   <div class="form-actions">
 	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
   </div>
+   {% if msg %}
+  <div class="alert alert-block alert-error fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 class="alert-heading">Direccion Repetida</h4>
+    <p>{{ msg }}</p>
+  </div>
+  {% endif %}
   {{ cliente_form.errors }}
   {{ cliente_form.as_p }}
   <div class="form-actions">

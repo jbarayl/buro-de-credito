@@ -22,7 +22,7 @@
 			<th>Nombre</th>
 			<th>Direccion</th>
 			<th>Adeuda</th>
-			<th>Estado</th>
+			<th>Acciones</th>
 		</tr>
 		{% for cliente in clientes %}
 		<div id="myModal{{ cliente.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -31,20 +31,22 @@
 				<h3 id="myModalLabel">Seguro que Deseas Eliminar</h3>
 			</div>
 			<div class="modal-body">
-				<h4>Al eliminar esta cliente</h4>
+				<h4>Al eliminar este cliente</h4>
 				<p style="color:red;">Ya no sera posible recuperar sus datos de nuevo</p>
 			</div>
 			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal">Close</button>
+				<button class="btn" data-dismiss="modal">Cancelar</button>
 				<a href="/cliente/delete/{{ cliente.id }}/" class="btn btn-primary">Estoy Seguro</a>
 			</div>
 		</div>
 		<tr>
 			<td><a href="/cliente/{{ cliente.id }}/">{{ cliente.id }}</a></td>
 			<td>{{ cliente.nombre }}</td>
-			<td>{{ cliente.direccion }}</td>
+			<td>{{ cliente.city }}</td>
 			<td>{{ cliente.adeudo }}</td>
-			<td>{{ cliente.estado }}</td>
+			<td style="text-align:center;">
+        		<a href='#myModal{{ cliente.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
+      		</td>
 		</tr>
 		{% endfor %}
 	</table>

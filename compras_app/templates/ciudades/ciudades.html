@@ -1,11 +1,11 @@
 	{% extends "base.html" %}
 	{% block title %}Inicio{% endblock %}
-	{% block breadcrumb %}{{ block.super }} <a href="/ciudads/">Clientes</a>{% endblock %}
+	{% block breadcrumb %}{{ block.super }} <a href="/ciudades/">Ciudades</a>{% endblock %}
 	{% block content %}
 	<div class="form-actions">
-		<form action="/" method="get">
+		<form action="/ciudades/" method="get">
 			<div class="input-append">
-				<input id="id_filtro" name="filtro" class="span5" type="text" value="{{ filtro }}" placeholder="Nombre de ciudad, Sucursal, Estado de la ciudad"/>
+				<input id="id_filtro" name="filtro" class="span5" type="text" value="{{ filtro }}" placeholder="Nombre de ciudad"/>
 				<button class="btn btn-primary" type="submit" name="_btn" value=""><i class="icon-search"></i></button>
 				<a class="btn btn-success" href="/ciudad/"><i class='icon-plus-sign'></i></a>
 			</div>
@@ -16,14 +16,13 @@
 			</a>
 		</form>
 	</div>
-	SON[{{msg}}]
 	<table class="table table-hover">
 		<tr>
 			<th style="width: 400px;">Id</th>
 			<th>Nombre</th>
 			<th>Direccion</th>
 			<th>Adeuda</th>
-			<th>Estado</th>
+			<th>Accion</th>
 		</tr>
 
 		{% for ciudad in ciudades %}
@@ -46,6 +45,21 @@
 			<td>{{ ciudad.name }}</td>
 		</tr>
 		{% endfor %}
+		<div class="pagination pagination-mini">
+			<ul>
+				{% if ciudades.has_previous %}
+				<li><a href="?page={{ ciudades.previous_page_number }}">Anterior</a></li>
+				{% else %}
+				<li class="disabled"><a href="#">Anterior</a></li>
+				{% endif %}
+				<li class="disabled"><a href="#">Pagina {{ ciudades.number }} de {{ ciudades.paginator.num_pages }}.</a></li>
+				{% if ciudades.has_next %}
+				<li><a href="?page={{ ciudades.next_page_number }}">Siguiente</a></li>
+				{% else %}
+				<li class="disabled"><a href="#">Siguiente</a></li>
+				{% endif %} 
+			</ul>
+		</div>
 	</table>
 
 	{% endblock %}

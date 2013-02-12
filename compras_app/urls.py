@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     (r'^clientes/$', views.clientes_View),
     (r'^cliente/$', views.cliente_manageView),
     (r'^cliente/(?P<id>\d+)/', views.cliente_manageView),
+    (r'^cliente/delete/(?P<id>\d+)/', views.clientes_deleteView),
     #Ciudades
     (r'^ciudades/$', views.ciudades_View),
     (r'^ciudad/$', views.ciudad_manageView),
