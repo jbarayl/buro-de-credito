@@ -2,7 +2,7 @@
 	{% block title %}Inicio{% endblock %}
 	{% block breadcrumb %}{{ block.super }} <a href="/ciudades/">Ciudades</a>{% endblock %}
 	{% block content %}
-	<div class="form-actions">
+	<div class="form-actions mainmenu">
 		<form action="/ciudades/" method="get">
 			<div class="input-append">
 				<input id="id_filtro" name="filtro" class="span5" type="text" value="{{ filtro }}" placeholder="Nombre de ciudad"/>
@@ -45,7 +45,7 @@
 			<td>{{ ciudad.name }}</td>
 		</tr>
 		{% endfor %}
-		<div class="pagination pagination-mini">
+		<div class="pagination pagination-mini mainmenu">
 			<ul>
 				{% if ciudades.has_previous %}
 				<li><a href="?page={{ ciudades.previous_page_number }}">Anterior</a></li>

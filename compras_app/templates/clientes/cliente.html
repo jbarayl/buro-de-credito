@@ -2,9 +2,9 @@
 {% block title %}Clientes SIC{% endblock %}
 {% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a> > Cliente{% endblock %}
 {% block content %}
-<form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>
+<form method="post" class="form-horizontal mainmenu" action="" width="300px"  enctype='multipart/form-data'>
 {% csrf_token %}
-  <div class="form-actions">
+  <div class="form-actions mainmenu">
 	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
   </div>
    {% if msg %}
@@ -14,8 +14,18 @@
     <p>{{ msg }}</p>
   </div>
   {% endif %}
+  <div class="span3">
+    <label>Nombre</label>
+    {{ cliente_form.nombre }}
+  </div>
+  <div class="span3">
+    <label>Edad</label>
+    {{ cliente_form.edad }}
+  </div>
   {{ cliente_form.errors }}
+
   {{ cliente_form.as_p }}
+  
   <div class="form-actions">
 	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
   </div>

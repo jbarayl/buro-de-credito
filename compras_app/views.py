@@ -79,44 +79,53 @@ def index(request):
 
 @login_required(login_url='/login/')
 def compra_manageView(request, id = None, template_name='compras/compra.html'):
-	if id:
-		compra = get_object_or_404(Compra, pk=id)
+	try: 
+		filtro = request.GET['filtro']
+	except:
+		filtro = ''
+
+	if 'btnestado_cliente' in request.POST:
+		return HttpResponse('Se lececciono el cliente')
 	else:
-		compra = Compra()
+		if id:
+			compra = get_object_or_404(Compra, pk=id)
+		else:
+			compra = Compra()
 
-	if request.method == 'POST':
-		Compra_form = CompraManageForm(request.POST, request.FILES, instance=compra)
+		if request.method == 'POST':
+			Compra_form = CompraManageForm(request.POST, request.FILES, instance=compra)
 
-		pagos_formset = PagosCompra_formset(PagoManageForm, extra=1, can_delete=True)
-		pagosCompra_formset = pagos_formset(request.POST, request.FILES, instance=compra)
-		
-		if Compra_form.is_valid() and pagosCompra_formset.is_valid():
-			compra_O = Compra_form.save(commit = False)
-
-			total = compra_O.cantidad
-			adeudo = compra_O.cantidad
-
-			#GUARDA ARTICULOS DE INVENTARIO FISICO
-			for pago_form in pagosCompra_formset:
-				pago = pago_form.save(commit = False)
-				
-				if not pagosCompra_formset._should_delete_form(pago_form):
-					adeudo -= pago.cantidad 
-
-				#PARA CREAR UNO NUEVO
-				if not pago.id:
-					pago.Compra = compra_O
-					pago.fecha = datetime.datetime.now()
+			pagos_formset = PagosCompra_formset(PagoManageForm, extra=1, can_delete=True)
+			pagosCompra_formset = pagos_formset(request.POST, request.FILES, instance=compra)
 			
-			compra_O.adeudo = adeudo
-			compra_O.save()
-			pagosCompra_formset.save()
-			return HttpResponseRedirect('/')
-	else:
-		Compra_form = CompraManageForm(instance=compra)
-		pagos_formset = PagosCompra_formset(PagoManageForm, extra=1, can_delete=True)
-		pagosCompra_formset = pagos_formset(instance=compra)
-	c = {'compra_form': Compra_form, 'formset': pagosCompra_formset,}
+			if Compra_form.is_valid() and pagosCompra_formset.is_valid():
+				compra_O = Compra_form.save(commit = False)
+
+				total = compra_O.cantidad
+				adeudo = compra_O.cantidad
+
+				#GUARDA ARTICULOS DE INVENTARIO FISICO
+				for pago_form in pagosCompra_formset:
+					pago = pago_form.save(commit = False)
+					
+					if not pagosCompra_formset._should_delete_form(pago_form):
+						adeudo -= pago.cantidad 
+
+					#PARA CREAR UNO NUEVO
+					if not pago.id:
+						pago.Compra = compra_O
+						pago.fecha = datetime.datetime.now()
+				
+				compra_O.adeudo = adeudo
+				compra_O.save()
+				pagosCompra_formset.save()
+				return HttpResponseRedirect('/')
+		else:
+			Compra_form = CompraManageForm(instance=compra)
+			pagos_formset = PagosCompra_formset(PagoManageForm, extra=1, can_delete=True)
+			pagosCompra_formset = pagos_formset(instance=compra)
+
+	c = {'compra_form': Compra_form, 'formset': pagosCompra_formset,'compra_id':id}
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
@@ -223,3 +232,17 @@ def ciudades_View(request, template_name='ciudades/ciudades.html'):
 
 	c = {'ciudades':ciudades,'filtro':filtro,'msg':ciudades.count}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+def ajax_View(request, id=None):
+	if id:
+		compra = get_object_or_404(Compra, pk=id)
+	else:
+		compra = Compra()
+
+ 	if request.method == 'POST':
+ 		form = Compra_form = CompraManageForm(request.POST, request.FILES, instance=compra)
+ 		if form.is_valid():
+ 			cliente_nombre = form.cliente.nombre
+ 			return HttpResponse('Se lececciono el cliente :[%s]'% cliente_nombre, mimetype="text/plain") 
+ 		#else:
+ 		#	HttpResponse('ERROR!! NO SE Guardado correctamente')

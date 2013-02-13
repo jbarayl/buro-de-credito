@@ -2,7 +2,7 @@
 	{% block title %}Inicio{% endblock %}
 	{% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a>{% endblock %}
 	{% block content %}
-	<div class="form-actions">
+	<div class="form-actions mainmenu">
 		<form action="/" method="get">
 			<div class="input-append">
 				<input id="id_filtro" name="filtro" class="span5" type="text" value="{{ filtro }}" placeholder="Nombre de cliente, Sucursal, Estado de la cliente"/>
