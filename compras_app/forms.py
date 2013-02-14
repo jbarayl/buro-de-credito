@@ -14,16 +14,6 @@ class ClienteManageForm(forms.ModelForm):
 		widgets = autocomplete_light.get_widgets_dict(Cliente)
 		model = Cliente
 
-class CompraManageForm(forms.ModelForm):
-	class Meta:
-		widgets = autocomplete_light.get_widgets_dict(Compra)
-		model = Compra
-
-class PagoManageForm(forms.ModelForm):
-	class Meta:
-		model = Pago
-		readonly_fields = ['fecha',]
-
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
 		model = City
@@ -34,7 +24,3 @@ class CiudadManageForm(forms.ModelForm):
 			'geoname_id',
 			'name_ascii',
 			)
-
-
-def PagosCompra_formset(form, formset = BaseInlineFormSet, **kwargs):
-	return inlineformset_factory(Compra, Pago, form, formset, **kwargs)

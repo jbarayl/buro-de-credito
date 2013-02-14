@@ -1,19 +1,74 @@
 	{% extends "base.html" %}
 	{% block title %}Inicio{% endblock %}
+	<!-- JavaScript Code -->
+	{% block js_code %}
+	<script type="text/javascript">
+	$(function() {
+	  
+	  //$('#advanced_search, #link_single_search').hide();
+	  //$('#single_search').show();
+
+	  $('#link_busqueda').html('Búsqueda basica');
+	  $('#advanced_search, #link_single_search').show();
+	  $('#single_search, #link_advanced_search').hide();
+
+	  $('#link_advanced_search').click(function(){
+	  	$('#link_busqueda').html('Búsqueda basica');
+	  	$('#advanced_search, #link_single_search').show();
+	  	$('#single_search, #link_advanced_search').hide();
+	  });
+
+	  $('#link_single_search').click(function(){
+	  	$('#link_busqueda').html('Búsqueda avanzada');
+	  	$('#advanced_search, #link_single_search').hide();
+	  	$('#single_search, #link_advanced_search').show();
+	  });
+
+	});
+	</script>
+
+	{% endblock %}
 	{% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a>{% endblock %}
 	{% block content %}
 	<div class="form-actions mainmenu">
-		<form action="/" method="get">
-			<div class="input-append">
+		<form action="/clientes/" method="get">
+			<div id='single_search' class="input-append">
 				<input id="id_filtro" name="filtro" class="span5" type="text" value="{{ filtro }}" placeholder="Nombre de cliente, Sucursal, Estado de la cliente"/>
 				<button class="btn btn-primary" type="submit" name="_btn" value=""><i class="icon-search"></i></button>
 				<a class="btn btn-success" href="/cliente/"><i class='icon-plus-sign'></i></a>
 			</div>
-			<small class='muted'>Búsqueda avanzada
+			<small id='link_busqueda' class='muted'>Búsqueda avanzada
 			</small>
-			<a class="" href="/cliente/" rel="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="Popover on top">
+			<a id='link_advanced_search' class="" href="#" rel="popover" data-placement="top" data-content="." data-original-title="Pop">
+				<i class='icon-plus-sign'></i>
+			<a id='link_single_search' class="" href="#" rel="popover" data-placement="top" data-content="." data-original-title="Pop">
 				<i class='icon-plus-sign'></i>
 			</a>
+			<div id='advanced_search'style='text-align:left;'>
+				<div class="span3">
+    				<label>Cliente</label>
+    				{{ clienteform.nombre }}
+				</div>
+				<div class="span3">
+    				<label>Nombre Ciudad</label>
+    				{{ clienteform.city }}
+    			</div>
+				<div class="span3">
+    				<label>Nombre Colonia o # Campo</label>
+    				<input type='text' class='span3' placeholder='No de campo o colonia'></input>
+    			</div>
+				<div class="span3">
+    				<label>Numero de casa</label>
+					<input type='text' class='span3' placeholder='Numero de Casa'></input>
+				</div>
+				<div class="span3">
+    				<label>Codigo postal</label>
+					<input type='text' class='span2' placeholder='Codigo Postal'></input>
+				</div>
+				<div>
+					<button class="btn btn-primary" type="submit" name="_btn" value="B"><i class="icon-search"></i></button>
+				</div>
+			</div>
 		</form>
 	</div>
 	<table class="table table-hover">
