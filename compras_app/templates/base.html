@@ -38,7 +38,7 @@
     </div>
     <div style="text-align:right; height:2em; margin-right: 2em;">
       {% if user.username %}
-       Administrador <a class="btn btn-small btn-danger" href="/logout/">  Cerrar Sesión</a>
+       {{ user.username }} <a class="btn btn-small btn-danger" href="/logout/">  Cerrar Sesión</a>
       {% else %}
         <a class="btn btn-small btn-success" href="/login/">Iniciar Sesión</a>
       {% endif %}
@@ -50,7 +50,7 @@
       {% block content %}{% endblock %}
     </div>
   </section>
-  <footer>
+  <footer class='mainmenu'>
     SIC &copy; 2012
   </footer>
 

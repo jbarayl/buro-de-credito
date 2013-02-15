@@ -20,8 +20,10 @@ class ClientesBusquedaForm(forms.ModelForm):
 	"""""
 	nombre 			= forms.CharField(required=False)
 	dir_colonia 	= forms.CharField(required=False)
-	codigo_postal 	= forms.CharField(required=False)
-	telefono 		= forms.CharField(required=False)
+	dir_no_exterior = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
+	dir_no_interior = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
+	codigo_postal 	= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
+	telefono 		= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10'}), required=False)
 	dir_poblacion 	= forms.CharField(required=False)
 
 	class Meta:

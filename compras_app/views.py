@@ -71,6 +71,7 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 		cliente = Cliente()
 
 	msg = '' 
+
 	if request.method == 'POST':
 		Cliente_form = ClienteManageForm(request.POST, request.FILES, instance=cliente)
 
@@ -81,13 +82,18 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 			if clientesIguales.count() > 1:
 				msg = 'Ya existe otro cliente con la misma direccion porfavor revisa bien los datos!'
 			else:
-				cliente_O.save()
+				if request.user.has_perm('compras_app.change_cliente'):
+					cliente_O.save()
+
 				return HttpResponseRedirect('/clientes/')
 			
 			c = {'cliente_form': Cliente_form, 'msg':msg}
 			return render_to_response(template_name, c, context_instance=RequestContext(request))
 	else:
-		Cliente_form = ClienteManageForm(instance=cliente)
+		if request.user.has_perm('compras_app.add_cliente'):
+			Cliente_form = ClienteManageForm(instance=cliente)
+		else:
+			return HttpResponseRedirect('/clientes/')
 		
 	c = {'cliente_form': Cliente_form, }
 
@@ -102,7 +108,7 @@ def clientesView(request, id = None, template_name='clientes/clientes.html'):
 		cliente = get_object_or_404(Cliente, pk=id)
 	else:
 		cliente = Cliente()
-
+	
 	clientesIguales = None
 	msg = '' 
 	if request.method == 'POST':
@@ -111,11 +117,23 @@ def clientesView(request, id = None, template_name='clientes/clientes.html'):
 		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
 			
+			if cliente_O.nombre == '':
+				cliente_O.nombre = '*'
+			if cliente_O.dir_colonia == '':
+				cliente_O.dir_colonia = '*'
+			if cliente_O.dir_calle == '':
+				cliente_O.dir_calle = '*'
+			if cliente_O.codigo_postal == '':
+				cliente_O.codigo_postal = '*'
+			if cliente_O.dir_poblacion == '':
+				cliente_O.dir_poblacion ='*'
+
 			if cliente_O.city == None:
 				#clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle)
 				clientesIguales = Cliente.objects.filter(
 					(Q(nombre__icontains = cliente_O.nombre) & Q(telefono__icontains = cliente_O.telefono))|
-					Q(dir_colonia__icontains = cliente_O.dir_colonia)|  
+					Q(dir_colonia__icontains = cliente_O.dir_colonia)|
+					Q(dir_colonia__icontains = cliente_O.dir_poblacion)|  
 					(Q(dir_calle__icontains = cliente_O.dir_calle)& (Q(dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
 					Q(codigo_postal__icontains = cliente_O.codigo_postal)
 					)
@@ -129,6 +147,7 @@ def clientesView(request, id = None, template_name='clientes/clientes.html'):
 			
 			if clientesIguales.count() > 1:
 				msg = 'Existe otro cliente con estos datos'
+
 			
 			c = {'cliente_form': Cliente_form, 'msg':msg, 'clientesIguales':clientesIguales,}
 			return render_to_response(template_name, c, context_instance=RequestContext(request))
@@ -154,8 +173,9 @@ def clientesView(request, id = None, template_name='clientes/clientes.html'):
 
 @login_required(login_url='/login/')
 def clientes_deleteView(request, id = None, template_name='clientes/clientes.html'):
-	cliente = get_object_or_404(Cliente, pk=id)
-	cliente.delete()
+	if request.user.has_perm('compras_app.delete_cliente'):
+		cliente = get_object_or_404(Cliente, pk=id)
+		cliente.delete()
 
 	return HttpResponseRedirect('/clientes/')
 
@@ -176,12 +196,16 @@ def ciudad_manageView(request, id = None, template_name='ciudades/ciudad.html'):
 		Ciudad_form = CiudadManageForm(request.POST, request.FILES, instance=ciudad)
 
 		if Ciudad_form.is_valid():
-			Ciudad_form.save()
+			if request.user.has_perm('compras_app.change_city'):
+				Ciudad_form.save()
 			
 			return HttpResponseRedirect('/ciudades/')
 	else:
-		Ciudad_form = CiudadManageForm(instance=ciudad)
-		
+		if request.user.has_perm('compras_app.add_city'):
+			Ciudad_form = CiudadManageForm(instance=ciudad)
+		else:
+			return HttpResponseRedirect('/ciudades/')
+
 	c = {'ciudad_form': Ciudad_form, }
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))

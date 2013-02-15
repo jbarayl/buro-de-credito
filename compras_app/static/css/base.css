@@ -1,40 +1,57 @@
-body{
+body
+{
 	font-family: 'Marcellus SC', serif;
 	background: #fff url(../img/wood-bg.jpg);
 	color: #584941;
 	text-shadow: 0 1px 1px rgba(255, 255, 255, .5);
 }
 
-.pagecontent{
+.pagecontent
+{
 	background-color: rgba(255, 255, 255, 0.49);
 	text-align: left;
 	padding: 1em;
 	padding-top: 0em;
-	padding-bottom: 2em;
+	padding-bottom: 0em;
 	margin-left: 1em;
 	margin-right: 1em;
 }
 
-.mainmenu{
+.mainmenu
+{
 	text-align: center;
 }
-.table th, .table td{
+
+.table th, .table td
+{
 	padding: 0px;
 }
 
 /* Botón Ir Arriba
 ----------------------------------------------- */
-#IrArriba {
+#IrArriba 
+{
 position: fixed;
 bottom: 30px; /* Distancia desde abajo */
 right: 30px; /* Distancia desde la derecha */
 }
 
-#IrArriba span {
+#IrArriba span 
+{
 width: 60px; /* Ancho del botón */
 height: 60px; /* Alto del botón */
 display: block;
 background: url(http://lh5.googleusercontent.com/-luDGEoQ_WZE/T1Ak-gta5MI/AAAAAAAACPI/ojfEGiaNmGw/s60/flecha-arriba.png) no-repeat center center;
+}
+
+.navbar
+{
+	margin-bottom: 4px;
+}
+
+.form-actions
+{
+	margin-top: 4px;
 }
 
 input{
