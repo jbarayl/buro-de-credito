@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     url(r'^login/$',views.ingresar),
     url(r'^logout/$', views.logoutUser),
     #clientes
-    (r'^clientes/$', views.clientes_View),
+    (r'^clientes/$', views.clientes_searchView),
     (r'^cliente/$', views.cliente_manageView),
     (r'^cliente/(?P<id>\d+)/', views.cliente_manageView),
     (r'^cliente/delete/(?P<id>\d+)/', views.clientes_deleteView),

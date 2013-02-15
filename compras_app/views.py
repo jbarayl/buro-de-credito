@@ -104,24 +104,52 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
+
+
+
 @login_required(login_url='/login/')
-def clientes_View(request, template_name='clientes/clientes.html'):
+def clientes_searchView(request, id = None, template_name='clientes/clienteSearch.html'):
+	if id:
+		cliente = get_object_or_404(Cliente, pk=id)
+	else:
+		cliente = Cliente()
+
+	clientesIguales = None
+	msg = '' 
+	if request.method == 'POST':
+		Cliente_form = ClientesBusquedaForm(request.POST, request.FILES, instance=cliente)
+
+		if Cliente_form.is_valid():
+			cliente_O = Cliente_form.save(commit = False)
+			
+			if cliente_O.city == None:
+				#clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle)
+				clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|Q(dir_colonia__icontains = cliente_O.dir_colonia)|Q(dir_no_interior__icontains = cliente_O.dir_no_interior)|Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)|Q(codigo_postal__icontains = cliente_O.codigo_postal)|Q(dir_calle__icontains = cliente_O.dir_calle))
+			else:
+				clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|Q(dir_colonia__icontains = cliente_O.dir_colonia)|Q(dir_no_interior__icontains = cliente_O.dir_no_interior)|Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)|Q(codigo_postal__icontains = cliente_O.codigo_postal)|Q(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city))
+					#Cliente.objects.filter(nombre__icontains = cliente_O.nombre).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city)
+			
+			if clientesIguales.count() > 1:
+				msg = 'Ya existe otro cliente con la misma direccion porfavor revisa bien los datos! el primero es %s'% clientesIguales[0].nombre
+			
+			c = {'cliente_form': Cliente_form, 'msg':msg, 'clientesIguales':clientesIguales,}
+			return render_to_response(template_name, c, context_instance=RequestContext(request))
+	else:
+		clientesIguales = Cliente.objects.all()		
+		Cliente_form = ClientesBusquedaForm(instance=cliente)
+	
+	c = {'cliente_form':Cliente_form, 'clientesIguales':clientesIguales,}
+  	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def clientes_View(request, form_class = ClientesBusquedaForm ,template_name='clientes/clientes.html'):
 	try: 
 		filtro = request.GET['filtro']
 	except:
 		filtro = ''
-
-	cliente = Cliente()
-	if request.method == 'POST':
-		clienteform = ClienteManageForm(request.POST, request.FILES, instance=cliente)
-		cliente_O = clienteform.save(commit = False)
-		clientes = Cliente.objects.filter(city = cliente_O.city).filter(codigo_postal 	= 	cliente_O.codigo_postal).filter(dir_colonia		=	cliente_O.dir_colonia).filter(dir_calle		=	cliente_O.dir_calle).filter(dir_poblacion	=	cliente_O.dir_poblacion)
-	else:
-		clienteform = ClienteManageForm(instance=cliente)
-		clientes = Cliente.objects.all()
-
-	c = {'clientes':clientes, 'filtro':filtro, 'clienteform':clienteform,}
-
+	
+	clientes = Cliente.objects.filter(nombre=filtro)
+	c = {'clientes':clientes, 'filtro':filtro, 'clienteform':form,}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

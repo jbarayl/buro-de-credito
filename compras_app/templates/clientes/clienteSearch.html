@@ -19,13 +19,6 @@
     {{ cliente_form.nombre }}
   </div>
   <div class="span3">
-    <label>Edad</label>
-    <div class="input-prepend input-append">
-      <span class="add-on">#</span>
-      {{ cliente_form.edad }}
-    </div>
-  </div>
-  <div class="span3">
     <label>Codigo Postal</label>
     <div class="input-prepend input-append">
       <span class="add-on">#</span>
@@ -59,10 +52,6 @@
     <label>Poblacion</label>
     {{ cliente_form.dir_poblacion }}
   </div>
-  <div class="span3" style='clear:both;'>
-    <label>Referencia</label>
-    {{ cliente_form.dir_referencia }}
-  </div>
   <div class="span3">
     <label>Telefono</label>
     <div class="input-prepend input-append">
@@ -71,20 +60,32 @@
     </div>
   </div>
   <div class="span3">
-    <label>Ocupacion</label>
-    {{ cliente_form.ocupacion }}
-  </div>
-  <div class="span3">
-    <label>Institucion</label>
-    {{ cliente_form.institucion }}
-  </div>
-  <div class="span3">
     <label>Ciudad</label>
     {{ cliente_form.city }}
   </div>
   {{ cliente_form.errors }}
-
-  
+  <div style='clear:both;'> 
+   <table class="table table-hover">
+    <tr>
+      <th style="width: 400px;">Id</th>
+      <th>Nombre</th>
+      <th>Direccion</th>
+      <th>Adeuda</th>
+      <th>Acciones</th>
+    </tr>
+    {% for cliente in clientesIguales %}
+    <tr>
+      <td><a href="/cliente/{{ cliente.id }}/">{{ cliente.id }}</a></td>
+      <td>{{ cliente.nombre }}</td>
+      <td>{{ cliente.city }}</td>
+      <td>{{ cliente.adeudo }}</td>
+      <td style="text-align:center;">
+           
+          </td>
+    </tr>
+    {% endfor %}
+  </table>
+  </div>
   <div class="form-actions mainmenu" style='clear:both;'>
 	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
   </div>

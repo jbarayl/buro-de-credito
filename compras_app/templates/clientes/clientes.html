@@ -30,6 +30,7 @@
 	{% endblock %}
 	{% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a>{% endblock %}
 	{% block content %}
+	{{ msg }}
 	<div class="form-actions mainmenu">
 		<form action="/clientes/" method="get">
 			<div id='single_search' class="input-append">
@@ -51,11 +52,11 @@
 				</div>
 				<div class="span3">
     				<label>Nombre Ciudad</label>
-    				{{ clienteform.city }}
+    				{{ clienteform.ciudad }}
     			</div>
 				<div class="span3">
     				<label>Nombre Colonia o # Campo</label>
-    				<input type='text' class='span3' placeholder='No de campo o colonia'></input>
+    				{{ clienteform.colonia }}
     			</div>
 				<div class="span3">
     				<label>Numero de casa</label>
@@ -105,5 +106,5 @@
 		</tr>
 		{% endfor %}
 	</table>
-
+	{% include 'autocomplete_light/static.html' %}
 	{% endblock %}

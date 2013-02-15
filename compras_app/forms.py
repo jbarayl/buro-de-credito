@@ -14,6 +14,26 @@ class ClienteManageForm(forms.ModelForm):
 		widgets = autocomplete_light.get_widgets_dict(Cliente)
 		model = Cliente
 
+class ClientesBusquedaForm(forms.ModelForm):
+	"""""
+		Permite hacer busquedas de clientes basado en un conjunto de criterios
+	"""""
+	nombre 			= forms.CharField(required=False)
+	dir_colonia 	= forms.CharField(required=False)
+	codigo_postal 	= forms.CharField(required=False)
+	telefono 		= forms.CharField(required=False)
+	dir_poblacion 	= forms.CharField(required=False)
+
+	class Meta:
+		widgets = autocomplete_light.get_widgets_dict(Cliente)
+		model = Cliente
+		exclude ={
+			'edad',
+			'ocupacion',
+			'institucion',
+
+		}
+	
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
 		model = City
