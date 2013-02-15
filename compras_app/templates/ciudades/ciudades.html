@@ -9,22 +9,14 @@
 				<button class="btn btn-primary" type="submit" name="_btn" value=""><i class="icon-search"></i></button>
 				<a class="btn btn-success" href="/ciudad/"><i class='icon-plus-sign'></i></a>
 			</div>
-			<small class='muted'>Búsqueda avanzada
-			</small>
-			<a class="" href="/ciudad/" rel="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="Popover on top">
-				<i class='icon-plus-sign'></i>
-			</a>
 		</form>
 	</div>
 	<table class="table table-hover">
 		<tr>
-			<th style="width: 400px;">Id</th>
 			<th>Nombre</th>
-			<th>Direccion</th>
-			<th>Adeuda</th>
-			<th>Accion</th>
+			<th>Estado</th>
+			<th>Pais</th>
 		</tr>
-
 		{% for ciudad in ciudades %}
 		<div id="myModal{{ ciudad.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-header">
@@ -41,8 +33,9 @@
 			</div>
 		</div>
 		<tr>
-			<td><a href="/ciudad/{{ ciudad.id }}/">{{ ciudad.id }}</a></td>
-			<td>{{ ciudad.name }}</td>
+			<td><a href="/ciudad/{{ ciudad.id }}/">{{ ciudad.name }}</a></td>
+			<td>{{ ciudad.region }}</td>
+			<td>{{ ciudad.country }}</td>
 		</tr>
 		{% endfor %}
 		<div class="pagination pagination-mini mainmenu">

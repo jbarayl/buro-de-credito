@@ -3,10 +3,8 @@
 {% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a> > Cliente{% endblock %}
 {% block content %}
 <form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+  <br>
 {% csrf_token %}
-  <div class="form-actions mainmenu">
-	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
-  </div>
    {% if msg %}
   <div class="alert alert-block alert-error fade in">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -32,11 +30,23 @@
       {{ cliente_form.codigo_postal }}
     </div>
   </div>
+  <div class="span3" style='clear:both;'>
+    <label>Ciudad</label>
+    {{ cliente_form.city }}
+  </div>
   <div class="span3">
+    <label>Colonia</label>
+    {{ cliente_form.dir_colonia }}
+  </div>
+  <div class="span3">
+    <label>Poblacion</label>
+    {{ cliente_form.dir_poblacion }}
+  </div>
+   <div class="span3" style='clear:both;'>
     <label>Calle</label>
     {{ cliente_form.dir_calle }}
   </div>
-  <div class="span3" style='clear:both;'>
+  <div class="span3" >
     <label>No Exterior</label>
     <div class="input-prepend input-append">
       <span class="add-on">#</span>
@@ -49,15 +59,6 @@
       <span class="add-on">#</span>
       {{ cliente_form.dir_no_interior }}
     </div>
-  </div>
-
-  <div class="span3">
-    <label>Colonia</label>
-    {{ cliente_form.dir_colonia }}
-  </div>
-  <div class="span3">
-    <label>Poblacion</label>
-    {{ cliente_form.dir_poblacion }}
   </div>
   <div class="span3" style='clear:both;'>
     <label>Referencia</label>
@@ -78,10 +79,7 @@
     <label>Institucion</label>
     {{ cliente_form.institucion }}
   </div>
-  <div class="span3">
-    <label>Ciudad</label>
-    {{ cliente_form.city }}
-  </div>
+  
   {{ cliente_form.errors }}
 
   

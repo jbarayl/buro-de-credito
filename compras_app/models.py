@@ -27,10 +27,10 @@ class Cliente(models.Model):
 	dir_poblacion = models.CharField(max_length=100)
 	dir_referencia = models.CharField(max_length=100, blank=True, null=True)
 
-	telefono = models.CharField(max_length=10)
+	telefono = models.CharField(max_length=10, blank=True, null=True)
 
-	ocupacion = models.CharField(max_length=30)
-	institucion = models.CharField(max_length=30)
+	ocupacion = models.CharField(max_length=30, blank=True, null=True)
+	institucion = models.CharField(max_length=30, blank=True, null=True)
 	
 	def __unicode__(self):
 		return self.nombre

@@ -3,12 +3,12 @@ from django.views import generic
 from compras_app import views
 
 urlpatterns = patterns('',
-	(r'^$', views.index),
+	(r'^$', views.clientesView),
     #LOGIN
     url(r'^login/$',views.ingresar),
     url(r'^logout/$', views.logoutUser),
     #clientes
-    (r'^clientes/$', views.clientes_searchView),
+    (r'^clientes/$', views.clientesView),
     (r'^cliente/$', views.cliente_manageView),
     (r'^cliente/(?P<id>\d+)/', views.cliente_manageView),
     (r'^cliente/delete/(?P<id>\d+)/', views.clientes_deleteView),

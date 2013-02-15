@@ -57,18 +57,6 @@ def logoutUser(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-@login_required(login_url='/login/')
-def index(request, template_name='clientes/clientes.html'):
-	try: 
-		filtro = request.GET['filtro']
-	except:
-		filtro = ''
-
-	clientes = Cliente.objects.filter(nombre__icontains=filtro)
-	c = {'clientes':clientes,'filtro':filtro,}
-  	return render_to_response(template_name, c, context_instance=RequestContext(request))
-
-
 ##########################################
 ## 										##
 ##               CLIENTE			    ##
@@ -94,6 +82,7 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 				msg = 'Ya existe otro cliente con la misma direccion porfavor revisa bien los datos!'
 			else:
 				cliente_O.save()
+				return HttpResponseRedirect('/clientes/')
 			
 			c = {'cliente_form': Cliente_form, 'msg':msg}
 			return render_to_response(template_name, c, context_instance=RequestContext(request))
@@ -108,7 +97,7 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 
 
 @login_required(login_url='/login/')
-def clientes_searchView(request, id = None, template_name='clientes/clienteSearch.html'):
+def clientesView(request, id = None, template_name='clientes/clientes.html'):
 	if id:
 		cliente = get_object_or_404(Cliente, pk=id)
 	else:
@@ -124,13 +113,22 @@ def clientes_searchView(request, id = None, template_name='clientes/clienteSearc
 			
 			if cliente_O.city == None:
 				#clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle)
-				clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|Q(dir_colonia__icontains = cliente_O.dir_colonia)|Q(dir_no_interior__icontains = cliente_O.dir_no_interior)|Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)|Q(codigo_postal__icontains = cliente_O.codigo_postal)|Q(dir_calle__icontains = cliente_O.dir_calle))
+				clientesIguales = Cliente.objects.filter(
+					(Q(nombre__icontains = cliente_O.nombre) & Q(telefono__icontains = cliente_O.telefono))|
+					Q(dir_colonia__icontains = cliente_O.dir_colonia)|  
+					(Q(dir_calle__icontains = cliente_O.dir_calle)& (Q(dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
+					Q(codigo_postal__icontains = cliente_O.codigo_postal)
+					)
 			else:
-				clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|Q(dir_colonia__icontains = cliente_O.dir_colonia)|Q(dir_no_interior__icontains = cliente_O.dir_no_interior)|Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)|Q(codigo_postal__icontains = cliente_O.codigo_postal)|Q(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city))
+				clientesIguales = Cliente.objects.filter(
+					(Q(nombre__icontains = cliente_O.nombre) & Q(telefono__icontains = cliente_O.telefono))|
+					Q(dir_colonia__icontains = cliente_O.dir_colonia)|  
+					(Q(dir_calle__icontains = cliente_O.dir_calle)& (Q(dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
+					Q(codigo_postal__icontains = cliente_O.codigo_postal)).filter(city = cliente_O.city)
 					#Cliente.objects.filter(nombre__icontains = cliente_O.nombre).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city)
 			
 			if clientesIguales.count() > 1:
-				msg = 'Ya existe otro cliente con la misma direccion porfavor revisa bien los datos! el primero es %s'% clientesIguales[0].nombre
+				msg = 'Existe otro cliente con estos datos'
 			
 			c = {'cliente_form': Cliente_form, 'msg':msg, 'clientesIguales':clientesIguales,}
 			return render_to_response(template_name, c, context_instance=RequestContext(request))
@@ -138,18 +136,20 @@ def clientes_searchView(request, id = None, template_name='clientes/clienteSearc
 		clientesIguales = Cliente.objects.all()		
 		Cliente_form = ClientesBusquedaForm(instance=cliente)
 	
-	c = {'cliente_form':Cliente_form, 'clientesIguales':clientesIguales,}
-  	return render_to_response(template_name, c, context_instance=RequestContext(request))
+	paginator = Paginator(clientesIguales, 20) # Muestra 5 inventarios por pagina
+	page = request.GET.get('page')
 
-@login_required(login_url='/login/')
-def clientes_View(request, form_class = ClientesBusquedaForm ,template_name='clientes/clientes.html'):
-	try: 
-		filtro = request.GET['filtro']
-	except:
-		filtro = ''
-	
-	clientes = Cliente.objects.filter(nombre=filtro)
-	c = {'clientes':clientes, 'filtro':filtro, 'clienteform':form,}
+	#####PARA PAGINACION##############
+	try:
+		clientes = paginator.page(page)
+	except PageNotAnInteger:
+	    # If page is not an integer, deliver first page.
+	    clientes = paginator.page(1)
+	except EmptyPage:
+	    # If page is out of range (e.g. 9999), deliver last page of results.
+	    clientes = paginator.page(paginator.num_pages)
+
+	c = {'cliente_form':Cliente_form, 'clientesIguales':clientes,}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
