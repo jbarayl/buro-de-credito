@@ -36,6 +36,19 @@ class ClientesBusquedaForm(forms.ModelForm):
 
 		}
 	
+class CreditoForm(forms.ModelForm):
+	"""""
+		Permite hacer busquedas de de creditos basado en un conjunto de criterios
+	"""""
+
+	class Meta:
+		model = Credito
+		exclude = {
+			'monto_total',
+			'cliente',
+			'fecha_limite',
+		}
+	
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
 		model = City

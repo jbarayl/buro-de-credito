@@ -100,19 +100,13 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 
-
-
 @login_required(login_url='/login/')
 def clientesView(request, id = None, template_name='clientes/clientes.html'):
-	if id:
-		cliente = get_object_or_404(Cliente, pk=id)
-	else:
-		cliente = Cliente()
 	
 	clientesIguales = None
 	msg = '' 
 	if request.method == 'POST':
-		Cliente_form = ClientesBusquedaForm(request.POST, request.FILES, instance=cliente)
+		Cliente_form = ClientesBusquedaForm(request.POST, request.FILES)
 
 		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
@@ -153,8 +147,10 @@ def clientesView(request, id = None, template_name='clientes/clientes.html'):
 			return render_to_response(template_name, c, context_instance=RequestContext(request))
 	else:
 		clientesIguales = Cliente.objects.all()		
-		Cliente_form = ClientesBusquedaForm(instance=cliente)
+		Cliente_form = ClientesBusquedaForm()
 	
+	#clientesIguales = Cliente.objects.all()
+
 	paginator = Paginator(clientesIguales, 20) # Muestra 5 inventarios por pagina
 	page = request.GET.get('page')
 
@@ -247,3 +243,78 @@ def ajax_View(request, id=None):
  			return HttpResponse('Se lececciono el cliente :[%s]'% cliente_nombre, mimetype="text/plain") 
  		#else:
  		#	HttpResponse('ERROR!! NO SE Guardado correctamente')
+
+##########################################
+## 										##
+##               CREDITO  			    ##
+##										##
+##########################################
+
+@login_required(login_url='/login/')
+def creditosView(request, id = None, template_name='creditos/creditos.html'):
+	
+	clientesIguales = None
+	msg = '' 
+	if request.method == 'POST':
+		creditos_form = CreditoForm(request.POST)
+		Cliente_form = ClientesBusquedaForm(request.POST)
+
+		if Cliente_form.is_valid():
+			cliente_O = Cliente_form.save(commit = False)
+			
+			if cliente_O.nombre == '':
+				cliente_O.nombre = '*'
+			if cliente_O.dir_colonia == '':
+				cliente_O.dir_colonia = '*'
+			if cliente_O.dir_calle == '':
+				cliente_O.dir_calle = '*'
+			if cliente_O.codigo_postal == '':
+				cliente_O.codigo_postal = '*'
+			if cliente_O.dir_poblacion == '':
+				cliente_O.dir_poblacion ='*'
+
+			if cliente_O.city == None:
+				#clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle)
+				clientesIguales = Credito.objects.filter(
+					(Q(cliente__nombre__icontains = cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
+					Q(cliente__dir_colonia__icontains = cliente_O.dir_colonia)|
+					Q(cliente__dir_colonia__icontains = cliente_O.dir_poblacion)|  
+					(Q(cliente__dir_calle__icontains = cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
+					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)
+					)
+			else:
+				clientesIguales = Credito.objects.filter(
+					(Q(cliente__nombre__icontains = cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
+					Q(cliente__dir_colonia__icontains = cliente_O.dir_colonia)|  
+					(Q(cliente__dir_calle__icontains = cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
+					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)).filter(cliente__city = cliente_O.city)
+					#Cliente.objects.filter(nombre__icontains = cliente_O.nombre).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city)
+			
+			if clientesIguales.count() > 1:
+				msg = 'Existe otro cliente con estos datos'
+
+			
+			c = {'cliente_form': Cliente_form, 'creditos_form':creditos_form, 'msg':msg, 'creditosIguales':clientesIguales,}
+			return render_to_response(template_name, c, context_instance=RequestContext(request))
+	else:
+		clientesIguales = Credito.objects.all()
+		Cliente_form = ClientesBusquedaForm()
+		creditos_form = CreditoForm()
+	
+	#clientesIguales = Cliente.objects.all()
+
+	paginator = Paginator(clientesIguales, 20) # Muestra 5 inventarios por pagina
+	page = request.GET.get('page')
+
+	#####PARA PAGINACION##############
+	try:
+		clientes = paginator.page(page)
+	except PageNotAnInteger:
+	    # If page is not an integer, deliver first page.
+	    clientes = paginator.page(1)
+	except EmptyPage:
+	    # If page is out of range (e.g. 9999), deliver last page of results.
+	    clientes = paginator.page(paginator.num_pages)
+
+	c = {'cliente_form':Cliente_form, 'creditosIguales':clientes, 'creditos_form':creditos_form,}
+  	return render_to_response(template_name, c, context_instance=RequestContext(request))

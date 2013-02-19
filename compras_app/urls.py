@@ -17,5 +17,6 @@ urlpatterns = patterns('',
     (r'^ciudad/$', views.ciudad_manageView),
     (r'^ciudad/(?P<id>\d+)/', views.ciudad_manageView),
     (r'^ajax/$', views.ajax_View),
-
+    #Creditos
+    (r'^creditos/$', views.creditosView),
 )
