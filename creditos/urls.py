@@ -19,4 +19,6 @@ urlpatterns = patterns('',
     (r'^ajax/$', views.ajax_View),
     #Creditos
     (r'^creditos/$', views.creditosView),
+    (r'^credito/$', views.credito_manageView),
+    (r'^credito/(?P<id>\d+)/', views.credito_manageView),
 )

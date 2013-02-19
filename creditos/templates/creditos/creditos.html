@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Credito SIC{% endblock %}
+{% block js_code %}
+<script>
+  $(function() {
+    $( "#id_fecha_limite" ).datepicker();
+    $( "#calendario" ).datepicker();
+  });
+</script>
+{% endblock %}
 {% block breadcrumb %}{{ block.super }} <a href="/creditos/">Creditos</a> {% endblock %}
 {% block content %}
 <form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
   {% csrf_token %}
   <div class="form-actions">
     <div class="span3">
-      <label>Nombre</label>
+      <label>Cliente</label>
       {{ cliente_form.nombre }}
     </div>
     <div class="span3">
@@ -25,11 +33,18 @@
       {{ creditos_form.empresa_otorga }}
     </div>
     <div class="span3">
-      <label>Fecha de prestamo</label>
+      <label>Fecha de pago menor o igual que</label>
       <div class="input-prepend input-append">
         <span class="add-on">#</span>
-        {{ creditos_form.fecha }}
+        {{ creditos_form.fecha_limite }}
+        <a class="btn " id='calendario'>
+          <i class="icon-calendar"></i>
+        </a>
       </div>
+    </div>
+    <div class="span3" >
+      <label>Liquidado</label>
+      {{ creditos_form.liquidado }}
     </div>
     <div style='clear:both;'>
       <hr>
@@ -96,14 +111,14 @@
   {% endif %}
   <div class="pagination pagination-mini mainmenu">
       <ul>
-        {% if creditosIguales.has_previous %}
-        <li><a href="?page={{ creditosIguales.previous_page_number }}">Anterior</a></li>
+        {% if creditos.has_previous %}
+        <li><a href="?page={{ creditos.previous_page_number }}">Anterior</a></li>
         {% else %}
         <li class="disabled"><a href="#">Anterior</a></li>
         {% endif %}
-        <li class="disabled"><a href="#">Pagina {{ creditosIguales.number }} de {{ creditosIguales.paginator.num_pages }}.</a></li>
-        {% if creditosIguales.has_next %}
-        <li><a href="?page={{ creditosIguales.next_page_number }}">Siguiente</a></li>
+        <li class="disabled"><a href="#">Pagina {{ creditos.number }} de {{ creditos.paginator.num_pages }}.</a></li>
+        {% if creditos.has_next %}
+        <li><a href="?page={{ creditos.next_page_number }}">Siguiente</a></li>
         {% else %}
         <li class="disabled"><a href="#">Siguiente</a></li>
         {% endif %} 
@@ -116,20 +131,23 @@
       <th>Nombre</th>
       <th>Tel.</th>
       <th>Ciudad</th>
-      <th>Cod. Postal</th>
       <th>Localidad</th>
       <th>Calle</th>
-      <th>Referencia</th>
+      <th>Fecha de pago</th>
+      <th>Dias de atraso</th>
+      <th>Cantidad</th>
     </tr>
-    {% for credito in creditosIguales %}
+
+    {% for credito in creditos %}
     <tr>
-      <td><a href="/cliente/{{ credito.id }}/">{{ credito.cliente.nombre }}</a></td>
-      <td>{{ credito.cliente.telefono }}</td>
-      <td>{{ credito.cliente.city }}</td>
-      <td>{{ credito.cliente.codigo_postal }}</td>
-      <td>{{ credito.cliente.dir_colonia }}, {{ credito.cliente.dir_poblacion }}</td>
-      <td>{{ credito.cliente.dir_calle }} # {{ credito.cliente.dir_no_interior }}{{credito.cliente.dir_no_exterior}}</td>
-      <td>{{ credito.cliente.dir_referencia }}</td>
+      <td><a href="/credito/{{ credito.id }}/">{{ credito.cliente_nombre }}</a></td>
+      <td>{{ credito.cliente_telefono }}</td>
+      <td>{{ credito.cliente_city }}</td>
+      <td>{{ credito.cliente_localidad }}</td>
+      <td>{{ credito.cliente_calle }} # {{ credito.cliente.dir_no_interior }}{{credito.cliente.dir_no_exterior}}</td>
+      <td>{{ credito.fecha_limite }}</td>
+      <td class='dias_atraso'>{{ credito.dias_atraso }}</td>
+      <td>{{ credito.cantidad }}</td>
     </tr>
     {% endfor %}
   </table>

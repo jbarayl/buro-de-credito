@@ -42,6 +42,8 @@ class Credito(models.Model):
 	fecha = models.DateField(default=datetime.now())
 	fecha_limite = models.DateField(blank=True, null=True)
 	monto_total = models.DecimalField(default=0, max_digits=15, decimal_places=2)
+	liquidado = models.BooleanField(default=False)
+
 	def __unicode__(self):
 		return u'%s'% self.id
 

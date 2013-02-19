@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Clientes SIC{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="/creditos/">Creditos</a> > Credito{% endblock %}
+{% block content %}
+<form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+  <br>
+{% csrf_token %}
+  {% if msg %}
+  <div class="alert alert-block alert-error fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 class="alert-heading">Direccion Repetida</h4>
+    <p>{{ msg }}</p>
+  </div>
+  {% endif %}
+  <div class="span3">
+    <label>Cliente</label>
+    {{ credito_form.cliente }}
+  </div>
+  <div class="span3">
+    <label>Empresa que otorga credito</label>
+    {{ credito_form.empresa_otorga }}
+  </div>
+  <div class="span3">
+    <label>Fecha de Credito</label>
+    {{ credito_form.fecha }}
+  </div>
+  <div class="span3">
+    <label>Fecha limite</label>
+    {{ credito_form.fecha_limite }}
+  </div>
+  <div class="span3">
+    <label>Monto de credito</label>
+    {{ credito_form.monto_total }}
+  </div>
+  <div class="span3">
+    <label>Liquidado</label>
+    {{ credito_form.liquidado }}
+  </div>
+  {{ credito_form.errors }}
+  
+  <div class="form-actions mainmenu" style='clear:both;'>
+	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
+  </div>
+</form>
+{% include 'autocomplete_light/static.html' %}
+{% endblock %}
