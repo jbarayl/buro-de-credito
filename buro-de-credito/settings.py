@@ -127,7 +127,7 @@ INSTALLED_APPS = (
     'autocomplete_light',
     'cities_light',
     'creditos',
-    'south',
+    #'south',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
