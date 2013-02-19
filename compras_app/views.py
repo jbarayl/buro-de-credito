@@ -256,11 +256,12 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	clientesIguales = None
 	msg = '' 
 	if request.method == 'POST':
-		creditos_form = CreditoForm(request.POST)
+		credito_form = CreditoForm(request.POST)
 		Cliente_form = ClientesBusquedaForm(request.POST)
 
-		if Cliente_form.is_valid():
+		if Cliente_form.is_valid() and credito_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
+			credito_O = credito_form.save(commit = False)
 			
 			if cliente_O.nombre == '':
 				cliente_O.nombre = '*'
@@ -276,30 +277,35 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 			if cliente_O.city == None:
 				#clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle)
 				clientesIguales = Credito.objects.filter(
-					(Q(cliente__nombre__icontains = cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
-					Q(cliente__dir_colonia__icontains = cliente_O.dir_colonia)|
-					Q(cliente__dir_colonia__icontains = cliente_O.dir_poblacion)|  
-					(Q(cliente__dir_calle__icontains = cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
-					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)
+					(Q(cliente__nombre__icontains 		= cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
+					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_colonia)|
+					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_poblacion)|  
+					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
+					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)|
+					Q(empresa_otorga 					= credito_O.empresa_otorga)|
+					Q(cliente__rfc 						= cliente_O.rfc)
 					)
 			else:
 				clientesIguales = Credito.objects.filter(
-					(Q(cliente__nombre__icontains = cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
-					Q(cliente__dir_colonia__icontains = cliente_O.dir_colonia)|  
-					(Q(cliente__dir_calle__icontains = cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
-					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)).filter(cliente__city = cliente_O.city)
-					#Cliente.objects.filter(nombre__icontains = cliente_O.nombre).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city)
+					(Q(cliente__nombre__icontains 		= cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
+					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_colonia)|
+					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_poblacion)|  
+					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
+					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)|
+					Q(empresa_otorga 					= credito_O.empresa_otorga)|
+					Q(cliente__rfc 						= cliente_O.rfc)
+					).filter(cliente__city = cliente_O.city)
 			
 			if clientesIguales.count() > 1:
 				msg = 'Existe otro cliente con estos datos'
 
 			
-			c = {'cliente_form': Cliente_form, 'creditos_form':creditos_form, 'msg':msg, 'creditosIguales':clientesIguales,}
+			c = {'cliente_form': Cliente_form, 'creditos_form':credito_form, 'msg':msg, 'creditosIguales':clientesIguales,}
 			return render_to_response(template_name, c, context_instance=RequestContext(request))
 	else:
 		clientesIguales = Credito.objects.all()
 		Cliente_form = ClientesBusquedaForm()
-		creditos_form = CreditoForm()
+		credito_form = CreditoForm()
 	
 	#clientesIguales = Cliente.objects.all()
 
@@ -316,5 +322,5 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	    # If page is out of range (e.g. 9999), deliver last page of results.
 	    clientes = paginator.page(paginator.num_pages)
 
-	c = {'cliente_form':Cliente_form, 'creditosIguales':clientes, 'creditos_form':creditos_form,}
+	c = {'cliente_form':Cliente_form, 'creditosIguales':clientes, 'creditos_form':credito_form,}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))

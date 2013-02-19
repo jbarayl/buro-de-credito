@@ -16,13 +16,13 @@
         {{ cliente_form.telefono }}
       </div>
     </div>
-    
-    <div class="span3">
+    <div class="span3" >
+      <label>RFC</label>
+      {{ cliente_form.rfc }}
+    </div>
+    <div class="span3" style='clear:both;'>
       <label>Empresa que otorga</label>
-      <div class="input-prepend input-append">
-        <span class="add-on">#</span>
-        {{ creditos_form.empresa_otorga }}
-      </div>
+      {{ creditos_form.empresa_otorga }}
     </div>
     <div class="span3">
       <label>Fecha de prestamo</label>
@@ -30,6 +30,9 @@
         <span class="add-on">#</span>
         {{ creditos_form.fecha }}
       </div>
+    </div>
+    <div style='clear:both;'>
+      <hr>
     </div>
     <div class="span3" style='clear:both;'>
       <label>Ciudad</label>

@@ -56,4 +56,22 @@ background: url(http://lh5.googleusercontent.com/-luDGEoQ_WZE/T1Ak-gta5MI/AAAAAA
 
 input{
 	/*text-transform: uppercase;*/
+	margin-bottom: 0px;
+}
+
+
+/*  formulario COMPRIMIDO */
+
+label 
+{
+	margin-bottom: 0px;
+}
+
+[class*="span"] 
+{
+	margin-left: 4px;
+}
+hr
+{
+	margin: 0px;
 }
