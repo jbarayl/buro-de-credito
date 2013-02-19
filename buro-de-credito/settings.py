@@ -1,4 +1,4 @@
-# Django settings for compras project.
+# Django settings for buro-de-credito project.
 #encoding:utf-8
 
 # Identificando la ruta del proyecto
@@ -17,7 +17,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'compras_db',                      # Or path to database file if using sqlite3.
+        'NAME': 'database',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -103,10 +103,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'compras.urls'
+ROOT_URLCONF = 'buro-de-credito.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'compras.wsgi.application'
+WSGI_APPLICATION = 'buro-de-credito.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -126,7 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'autocomplete_light',
     'cities_light',
-    'compras_app',
+    'creditos',
     'south',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

@@ -10,10 +10,10 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	 url(r'', include('compras_app.urls', namespace='compras_app')),
+	 url(r'', include('creditos.urls', namespace='creditos')),
     # Examples:
-    # url(r'^$', 'compras.views.home', name='home'),
-    # url(r'^compras/', include('compras.foo.urls')),
+    # url(r'^$', 'buro-de-credito.views.home', name='home'),
+    # url(r'^buro-de-credito/', include('buro-de-credito.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
