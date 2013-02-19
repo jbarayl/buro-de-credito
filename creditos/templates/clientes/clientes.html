@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Clientes SIC{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a> {% endblock %}
+{% block content %}
+<form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+  {% csrf_token %}
+  <div class="form-actions">
+    <div class="span3">
+      <label>Nombre</label>
+      {{ cliente_form.nombre }}
+    </div>
+    <div class="span3">
+      <label>Telefono</label>
+      <div class="input-prepend input-append">
+        <span class="add-on">#</span>
+        {{ cliente_form.telefono }}
+      </div>
+    </div>
+    <div class="span3" style='clear:both;'>
+      <label>Ciudad</label>
+      {{ cliente_form.city }}
+    </div>
+    <div class="span3">
+      <label>Codigo Postal</label>
+      <div class="input-prepend input-append">
+        <span class="add-on">#</span>
+        {{ cliente_form.codigo_postal }}
+      </div>
+    </div>
+    <div class="span3">
+      <label>Colonia</label>
+      {{ cliente_form.dir_colonia }}
+    </div>
+    <div class="span3">
+      <label>Poblacion</label>
+      {{ cliente_form.dir_poblacion }}
+    </div>
+    <div class="span3" style='clear:both;'>
+      <label>Calle</label>
+      {{ cliente_form.dir_calle }}
+    </div>
+    <div class="span3" >
+      <label>No Exterior</label>
+      <div class="input-prepend input-append">
+        <span class="add-on">#</span>
+        {{ cliente_form.dir_no_exterior}}
+      </div>
+    </div>
+    <div class="span3">
+      <label>No Interior</label>
+      <div class="input-prepend input-append">
+        <span class="add-on">#</span>
+        {{ cliente_form.dir_no_interior }}
+      </div>
+    </div>
+    <div class="span3">
+      <label>.</label>
+      
+      <div class="btn-group">
+        <input type="submit" class="btn btn-primary" value="Buscar" />
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu"><!-- 
+          <li><a href="#"></a></li>
+          <li class="divider"></li> -->
+          <li><a href="/cliente/">Nuevo Cliente</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% if msg %}
+  <div class="alert alert-block alert-error fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 class="alert-heading">Direccion Repetida</h4>
+    <p>{{ msg }}</p>
+  </div>
+  {% endif %}
+  <div class="pagination pagination-mini mainmenu">
+      <ul>
+        {% if ciudades.has_previous %}
+        <li><a href="?page={{ ciudades.previous_page_number }}">Anterior</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">Anterior</a></li>
+        {% endif %}
+        <li class="disabled"><a href="#">Pagina {{ ciudades.number }} de {{ ciudades.paginator.num_pages }}.</a></li>
+        {% if ciudades.has_next %}
+        <li><a href="?page={{ ciudades.next_page_number }}">Siguiente</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">Siguiente</a></li>
+        {% endif %} 
+      </ul>
+    </div>
+  {{ cliente_form.errors }}
+  <div style='clear:both;'> 
+   <table class="table table-hover">
+    <tr>
+      <th>Nombre</th>
+      <th>Tel.</th>
+      <th>Ciudad</th>
+      <th>Cod. Postal</th>
+      <th>Localidad</th>
+      <th>Calle</th>
+      <th>Referencia</th>
+    </tr>
+    {% for cliente in clientesIguales %}
+    <tr>
+      <td><a href="/cliente/{{ cliente.id }}/">{{ cliente.nombre }}</a></td>
+      <td>{{ cliente.telefono }}</td>
+      <td>{{ cliente.city }}</td>
+      <td>{{ cliente.codigo_postal }}</td>
+      <td>{{ cliente.dir_colonia }}, {{ cliente.dir_poblacion }}</td>
+      <td>{{ cliente.dir_calle }} # {{ cliente.dir_no_interior }}{{cliente.dir_no_exterior}}</td>
+      <td>{{ cliente.dir_referencia }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>  
+</div>
+</form>
+{% include 'autocomplete_light/static.html' %}
+{% endblock %}
