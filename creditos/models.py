@@ -40,7 +40,7 @@ class Credito(models.Model):
 	cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, blank=True, null=True)
 	empresa_otorga = models.ForeignKey(Empresa, on_delete=models.SET_NULL, blank=True, null=True)
 	fecha = models.DateField(default=datetime.now())
-	fecha_limite = models.DateField(blank=True, null=True)
+	fecha_limite = models.DateField()
 	monto_total = models.DecimalField(default=0, max_digits=15, decimal_places=2)
 	liquidado = models.BooleanField(default=False)
 

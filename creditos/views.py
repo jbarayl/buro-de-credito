@@ -256,83 +256,29 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	
 	creditosIguales = None
 	msg = '' 
+	
 	if request.method == 'POST':
-		credito_form = CreditoForm(request.POST)
 		Cliente_form = ClientesBusquedaForm(request.POST)
 
-		if Cliente_form.is_valid() and credito_form.is_valid():
+		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
-			credito_O = credito_form.save(commit = False)
-			
-			if cliente_O.rfc == '':
-				cliente_O.rfc = '*'
-			if cliente_O.telefono == '':
-				cliente_O.telefono = '*'
-			if cliente_O.nombre == '':
-				cliente_O.nombre = '*'
-			if cliente_O.dir_colonia == '':
-				cliente_O.dir_colonia = '*'
+
 			if cliente_O.dir_calle == '':
 				cliente_O.dir_calle = '*'
-			if cliente_O.codigo_postal == '':
-				cliente_O.codigo_postal = '*'
-			if cliente_O.dir_poblacion == '':
-				cliente_O.dir_poblacion ='*'
-
-			#if (credito_O.fecha_limite) == '':
-			#	fecha_limite = '07/02/2013'
-			# if credito_O.empresa_otorga == None:
-			# 	empresa_otorga1 = 0
-			# 	empresa_otorga2 = 99999
-			# else:
-			# 	empresa_otorga1 = credito_O.empresa_otorga
-			# 	empresa_otorga2 = credito_O.empresa_otorga
-			consulta =''
-			
-			if cliente_O.nombre != '':
-				consulta +='|Q(cliente__nombre__icontains 		= cliente_O.nombre)'
-			if cliente_O.city == None:
-				consulta +='|Q(cliente__city = cliente_O.city)'
-
-
-
-			if cliente_O.city == None:
-				creditosIguales = Credito.objects.filter(
-					(Q(cliente__nombre__icontains 		= cliente_O.nombre) | Q(cliente__telefono__icontains = cliente_O.telefono))|
-					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_colonia)|
-					Q(cliente__dir_poblacion__icontains 	= cliente_O.dir_poblacion)|  
-					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))
-					#Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)
-					#Q(empresa_otorga__gte 	= empresa_otorga1) & Q(empresa_otorga__lte = empresa_otorga2)
-					#Q(cliente__rfc 						= cliente_O.rfc)
+			if cliente_O.nombre == '':
+				cliente_O.nombre = '*'
+			if cliente_O.dir_no_exterior == '':
+				cliente_O.dir_no_exterior = '*'
+				
+			creditosIguales = Credito.objects.filter(
+					Q(cliente__nombre__icontains 		= cliente_O.nombre) |
+					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle) &  Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior))
 					)
-				#.filter(liquidado = credito_O.liquidado)
-					#.filter(fecha_limite__lte =  credito_O.fecha_limite)
-			else:
-				creditosIguales = Credito.objects.filter(
-					(Q(cliente__nombre__icontains 		= cliente_O.nombre) | Q(cliente__telefono__icontains = cliente_O.telefono))|
-					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_colonia)|
-					Q(cliente__dir_poblacion__icontains 	= cliente_O.dir_poblacion)|  
-					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))
-					)
-
-			clientesIguales = Credito.objects.filter(consulta)
-			
-					#Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)
-					#(Q(empresa_otorga__gte 	= empresa_otorga1) & Q(empresa_otorga__lte = empresa_otorga2))
-					#Q(cliente__rfc 						= cliente_O.rfc)
-				#.filter(cliente__city = cliente_O.city).filter(liquidado = credito_O.liquidado)
-				#.filter(fecha_limite__lte =  credito_O.fecha_limite)
-			
-			if creditosIguales.count() > 1:
-				msg = 'Existe otro cliente con estos datos'
-
 	else:
 		creditosIguales = Credito.objects.all()
 		Cliente_form = ClientesBusquedaForm()
-		credito_form = CreditoForm()
-	
-	#creditosIguales = creditosIguales.order_by('fecha_limite')
+		#credito_form = CreditoForm()
+
 	paginator = Paginator(creditosIguales, 20) # Muestra 20 
 	page = request.GET.get('page')
 
@@ -361,8 +307,8 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
          	'cantidad'			: credito.monto_total,
          	'liquidado'			: credito.liquidado,
                  })
-
-	c = {'cliente_form':Cliente_form, 'creditos':creditosData, 'creditos_form':credito_form, 'msg':'', }
+	
+	c = {'cliente_form':Cliente_form, 'creditos':creditosData,  'msg':msg, }
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Clientes SIC{% endblock %}
+{% block js_code %}
+<script>
+  $(function() {
+    $( "#id_fecha_limite" ).datepicker({dateFormat:'yy-mm-dd',});
+    $( "#id_fecha" ).datepicker({dateFormat:'yy-mm-dd',});
+  });
+</script>
+{% endblock %}
 {% block breadcrumb %}{{ block.super }} <a href="/creditos/">Creditos</a> > Credito{% endblock %}
 {% block content %}
 <form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
@@ -15,6 +23,8 @@
   <div class="span3">
     <label>Cliente</label>
     {{ credito_form.cliente }}
+    <span class="add-on"><a href="/cliente/" target="_blank"><i class='icon-plus-sign '></i></a></span>
+    
   </div>
   <div class="span3">
     <label>Empresa que otorga credito</label>
@@ -22,22 +32,30 @@
   </div>
   <div class="span3">
     <label>Fecha de Credito</label>
-    {{ credito_form.fecha }}
+    <div class="input-prepend input-append">
+      <span class="add-on"><i class='icon-calendar '></i></span>
+      {{ credito_form.fecha }}
+    </div>
   </div>
   <div class="span3">
     <label>Fecha limite</label>
-    {{ credito_form.fecha_limite }}
+    <div class="input-prepend input-append">
+      <span class="add-on"><i class='icon-calendar'></i></span>
+      {{ credito_form.fecha_limite }}
+    </div>
   </div>
-  <div class="span3">
+  <div class="span3" style='clear:both;'>
     <label>Monto de credito</label>
-    {{ credito_form.monto_total }}
+    <div class="input-prepend input-append">
+        <span class="add-on">$</span>
+        {{ credito_form.monto_total }}
+        <span class="add-on">.00</span>
+    </div>
+    
   </div>
-  <div class="span3">
-    <label>Liquidado</label>
-    {{ credito_form.liquidado }}
+  <div style='clear:both;'>
+    {{ credito_form.errors }}
   </div>
-  {{ credito_form.errors }}
-  
   <div class="form-actions mainmenu" style='clear:both;'>
 	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
   </div>

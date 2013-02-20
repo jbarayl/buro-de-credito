@@ -10,6 +10,7 @@ from django.forms.models import BaseInlineFormSet, inlineformset_factory
 from cities_light.models import City
 
 class ClienteManageForm(forms.ModelForm):
+	
 	class Meta:
 		widgets = autocomplete_light.get_widgets_dict(Cliente)
 		model = Cliente
@@ -19,23 +20,23 @@ class ClientesBusquedaForm(forms.ModelForm):
 		Permite hacer busquedas de clientes basado en un conjunto de criterios
 	"""""
 	nombre 			= forms.CharField(required=False)
-	dir_colonia 	= forms.CharField(required=False)
+	dir_calle = forms.CharField(required=False)
 	dir_no_exterior = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
-	dir_no_interior = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
-	#codigo_postal 	= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
-	telefono 		= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10'}), required=False)
-	dir_poblacion 	= forms.CharField(required=False)
-	#rfc = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'13','class':'span2'}),required=False)
+
 	class Meta:
 		widgets = autocomplete_light.get_widgets_dict(Cliente)
 		model = Cliente
 		exclude ={
+			'dir_colonia',
+			'dir_poblacion',
+			'city',
 			'edad',
 			'ocupacion',
 			'institucion',
 			'rfc',
 			'codigo_postal',
-
+			'dir_no_interior',
+			'dir_referencia',
 		}
 	
 class CreditoForm(forms.ModelForm):
@@ -56,8 +57,14 @@ class CreditoForm(forms.ModelForm):
 	
 class CreditoManageForm(forms.ModelForm):
 	widgets = autocomplete_light.get_widgets_dict(Credito)
+	fecha = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
+	fecha_limite = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
+	monto_total = forms.CharField(widget=forms.TextInput(attrs={'class':'span1'}))
 	class Meta:
 		model = Credito
+		exclude = {
+			'liquidado',
+		}
 
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
