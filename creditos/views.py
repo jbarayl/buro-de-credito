@@ -112,45 +112,20 @@ def clientesView(request, id = None, template_name='clientes/clientes.html'):
 		if Cliente_form.is_valid():
 			cliente_O = Cliente_form.save(commit = False)
 			
-			if cliente_O.nombre == '':
-				cliente_O.nombre = '*'
-			if cliente_O.dir_colonia == '':
-				cliente_O.dir_colonia = '*'
 			if cliente_O.dir_calle == '':
 				cliente_O.dir_calle = '*'
-			if cliente_O.codigo_postal == '':
-				cliente_O.codigo_postal = '*'
-			if cliente_O.dir_poblacion == '':
-				cliente_O.dir_poblacion ='*'
-
-			if cliente_O.city == None:
-				#clientesIguales = Cliente.objects.filter(Q(nombre__icontains = cliente_O.nombre)|).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle)
-				clientesIguales = Cliente.objects.filter(
-					(Q(nombre__icontains = cliente_O.nombre) & Q(telefono__icontains = cliente_O.telefono))|
-					Q(dir_colonia__icontains = cliente_O.dir_colonia)|
-					Q(dir_colonia__icontains = cliente_O.dir_poblacion)|  
-					(Q(dir_calle__icontains = cliente_O.dir_calle)& (Q(dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
-					Q(codigo_postal__icontains = cliente_O.codigo_postal)
+			if cliente_O.nombre == '':
+				cliente_O.nombre = '*'
+			if cliente_O.dir_no_exterior == '':
+				cliente_O.dir_no_exterior = '*'
+				
+			clientesIguales = Cliente.objects.filter(
+					Q(nombre__icontains 		= cliente_O.nombre) |
+					(Q(dir_calle__icontains 	= cliente_O.dir_calle) &  Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior))
 					)
-			else:
-				clientesIguales = Cliente.objects.filter(
-					(Q(nombre__icontains = cliente_O.nombre) & Q(telefono__icontains = cliente_O.telefono))|
-					Q(dir_colonia__icontains = cliente_O.dir_colonia)|  
-					(Q(dir_calle__icontains = cliente_O.dir_calle)& (Q(dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
-					Q(codigo_postal__icontains = cliente_O.codigo_postal)).filter(city = cliente_O.city)
-					#Cliente.objects.filter(nombre__icontains = cliente_O.nombre).filter(dir_colonia__icontains = cliente_O.dir_colonia).filter(dir_no_interior__icontains = cliente_O.dir_no_interior).filter(dir_no_exterior__icontains = cliente_O.dir_no_exterior).filter(codigo_postal__icontains = cliente_O.codigo_postal).filter(dir_calle__icontains = cliente_O.dir_calle).filter(city = cliente_O.city)
-			
-			if clientesIguales.count() > 1:
-				msg = 'Existe otro cliente con estos datos'
-
-			
-			c = {'cliente_form': Cliente_form, 'msg':msg, 'clientesIguales':clientesIguales,}
-			return render_to_response(template_name, c, context_instance=RequestContext(request))
 	else:
 		clientesIguales = Cliente.objects.all()		
 		Cliente_form = ClientesBusquedaForm()
-	
-	#clientesIguales = Cliente.objects.all()
 
 	paginator = Paginator(clientesIguales, 20) # Muestra 5 inventarios por pagina
 	page = request.GET.get('page')
@@ -231,6 +206,14 @@ def ciudades_View(request, template_name='ciudades/ciudades.html'):
 	c = {'ciudades':ciudades,'filtro':filtro,'msg':ciudades.count}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+def ciudad_deleteView(request, id = None, template_name='ciudades/ciudades.html'):
+	if request.user.has_perm('creditos.delete_ciudad'):
+		ciudad = get_object_or_404(City, pk=id)
+		ciudad.delete()
+
+	return HttpResponseRedirect('/ciudades/')
+
 def ajax_View(request, id=None):
 	if id:
 		compra = get_object_or_404(Compra, pk=id)
@@ -277,7 +260,6 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	else:
 		creditosIguales = Credito.objects.all()
 		Cliente_form = ClientesBusquedaForm()
-		#credito_form = CreditoForm()
 
 	paginator = Paginator(creditosIguales, 20) # Muestra 20 
 	page = request.GET.get('page')
@@ -305,7 +287,6 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
          	'fecha_limite'				: credito.fecha_limite,
          	'dias_atraso'		: str(datetime.now().toordinal() - fecha_limite.toordinal()),                  
          	'cantidad'			: credito.monto_total,
-         	'liquidado'			: credito.liquidado,
                  })
 	
 	c = {'cliente_form':Cliente_form, 'creditos':creditosData,  'msg':msg, }
@@ -335,3 +316,11 @@ def credito_manageView(request, id = None, template_name='creditos/credito.html'
 	c = {'credito_form': Credito_form, }
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def credito_deleteView(request, id = None, template_name='creditos/creditos.html'):
+	if request.user.has_perm('creditos.delete_credito'):
+		credito = get_object_or_404(Credito, pk=id)
+		credito.delete()
+
+	return HttpResponseRedirect('/creditos/')

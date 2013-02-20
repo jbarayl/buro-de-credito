@@ -16,6 +16,7 @@
 			<th>Nombre</th>
 			<th>Estado</th>
 			<th>Pais</th>
+			<th></th>
 		</tr>
 		{% for ciudad in ciudades %}
 		<div id="myModal{{ ciudad.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -36,6 +37,9 @@
 			<td><a href="/ciudad/{{ ciudad.id }}/">{{ ciudad.name }}</a></td>
 			<td>{{ ciudad.region }}</td>
 			<td>{{ ciudad.country }}</td>
+			<td style="text-align:center;">
+				<a href='#myModal{{ ciudad.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
+			</td>
 		</tr>
 		{% endfor %}
 		<div class="pagination pagination-mini mainmenu">

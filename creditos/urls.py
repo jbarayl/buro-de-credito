@@ -16,9 +16,11 @@ urlpatterns = patterns('',
     (r'^ciudades/$', views.ciudades_View),
     (r'^ciudad/$', views.ciudad_manageView),
     (r'^ciudad/(?P<id>\d+)/', views.ciudad_manageView),
-    (r'^ajax/$', views.ajax_View),
+    (r'^ciudad/delete/(?P<id>\d+)/', views.ciudad_deleteView),
+    #(r'^ajax/$', views.ajax_View),
     #Creditos
     (r'^creditos/$', views.creditosView),
     (r'^credito/$', views.credito_manageView),
     (r'^credito/(?P<id>\d+)/', views.credito_manageView),
+    (r'^credito/delete/(?P<id>\d+)/', views.credito_deleteView),
 )

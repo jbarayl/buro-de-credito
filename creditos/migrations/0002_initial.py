@@ -24,7 +24,7 @@ class Migration(SchemaMigration):
             ('nombre', self.gf('django.db.models.fields.CharField')(max_length=40)),
             ('edad', self.gf('django.db.models.fields.CharField')(default='', max_length=3)),
             ('rfc', self.gf('django.db.models.fields.CharField')(default='', max_length=13, null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cities_light.City'], null=True, blank=True)),
+            ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cities_light.City'], null=True, on_delete=models.SET_NULL, blank=True)),
             ('codigo_postal', self.gf('django.db.models.fields.CharField')(max_length=5)),
             ('dir_calle', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
             ('dir_no_exterior', self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True)),
@@ -34,17 +34,16 @@ class Migration(SchemaMigration):
             ('dir_referencia', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
             ('telefono', self.gf('django.db.models.fields.CharField')(default='', max_length=10, null=True, blank=True)),
             ('ocupacion', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
-            ('institucion', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
         ))
         db.send_create_signal('creditos', ['Cliente'])
 
         # Adding model 'Credito'
         db.create_table('creditos_credito', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('cliente', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['creditos.Cliente'], null=True, on_delete=models.SET_NULL, blank=True)),
-            ('empresa_otorga', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['creditos.Empresa'], null=True, on_delete=models.SET_NULL, blank=True)),
-            ('fecha', self.gf('django.db.models.fields.DateField')(default=datetime.datetime(2013, 2, 19, 0, 0))),
-            ('fecha_limite', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('cliente', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['creditos.Cliente'])),
+            ('empresa_otorga', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['creditos.Empresa'])),
+            ('fecha', self.gf('django.db.models.fields.DateField')()),
+            ('fecha_limite', self.gf('django.db.models.fields.DateField')()),
             ('monto_total', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=15, decimal_places=2)),
         ))
         db.send_create_signal('creditos', ['Credito'])
@@ -104,7 +103,7 @@ class Migration(SchemaMigration):
         },
         'creditos.cliente': {
             'Meta': {'object_name': 'Cliente'},
-            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cities_light.City']", 'null': 'True', 'blank': 'True'}),
+            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cities_light.City']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'codigo_postal': ('django.db.models.fields.CharField', [], {'max_length': '5'}),
             'dir_calle': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'dir_colonia': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
@@ -114,7 +113,6 @@ class Migration(SchemaMigration):
             'dir_referencia': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'edad': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '3'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'institucion': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'nombre': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'ocupacion': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'rfc': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '13', 'null': 'True', 'blank': 'True'}),
@@ -122,10 +120,10 @@ class Migration(SchemaMigration):
         },
         'creditos.credito': {
             'Meta': {'object_name': 'Credito'},
-            'cliente': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['creditos.Cliente']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
-            'empresa_otorga': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['creditos.Empresa']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
-            'fecha': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 2, 19, 0, 0)'}),
-            'fecha_limite': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'cliente': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['creditos.Cliente']"}),
+            'empresa_otorga': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['creditos.Empresa']"}),
+            'fecha': ('django.db.models.fields.DateField', [], {}),
+            'fecha_limite': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'monto_total': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '15', 'decimal_places': '2'})
         },

@@ -31,6 +31,24 @@
     </div>
   </div>
   <div class="span3" style='clear:both;'>
+    <label>RFC</label>
+    {{ cliente_form.rfc }}
+  </div>
+  <div class="span3">
+    <label>Telefono</label>
+    <div class="input-prepend input-append">
+      <span class="add-on">#</span>
+      {{ cliente_form.telefono }}
+    </div>
+  </div>
+  <div class="span3">
+    <label>Ocupacion</label>
+    {{ cliente_form.ocupacion }}
+  </div>
+  <div style='clear:both;'>
+    <hr>
+  </div>
+  <div class="span3" style='clear:both;'>
     <label>Ciudad</label>
     {{ cliente_form.city }}
   </div>
@@ -43,7 +61,7 @@
     {{ cliente_form.dir_poblacion }}
   </div>
    <div class="span3" style='clear:both;'>
-    <label>Calle</label>
+    <label>Calle o Campo</label>
     {{ cliente_form.dir_calle }}
   </div>
   <div class="span3" >
@@ -64,22 +82,6 @@
     <label>Referencia</label>
     {{ cliente_form.dir_referencia }}
   </div>
-  <div class="span3">
-    <label>Telefono</label>
-    <div class="input-prepend input-append">
-      <span class="add-on">#</span>
-      {{ cliente_form.telefono }}
-    </div>
-  </div>
-  <div class="span3">
-    <label>Ocupacion</label>
-    {{ cliente_form.ocupacion }}
-  </div>
-  <div class="span3">
-    <label>Institucion</label>
-    {{ cliente_form.institucion }}
-  </div>
-  
   {{ cliente_form.errors }}
 
   
