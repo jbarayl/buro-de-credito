@@ -266,6 +266,8 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 			
 			if cliente_O.rfc == '':
 				cliente_O.rfc = '*'
+			if cliente_O.telefono == '':
+				cliente_O.telefono = '*'
 			if cliente_O.nombre == '':
 				cliente_O.nombre = '*'
 			if cliente_O.dir_colonia == '':
@@ -279,34 +281,47 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 
 			#if (credito_O.fecha_limite) == '':
 			#	fecha_limite = '07/02/2013'
-			if credito_O.empresa_otorga == None:
-				empresa_otorga1 = 0
-				empresa_otorga2 = 99999
-			else:
-				empresa_otorga1 = credito_O.empresa_otorga
-				empresa_otorga2 = credito_O.empresa_otorga
+			# if credito_O.empresa_otorga == None:
+			# 	empresa_otorga1 = 0
+			# 	empresa_otorga2 = 99999
+			# else:
+			# 	empresa_otorga1 = credito_O.empresa_otorga
+			# 	empresa_otorga2 = credito_O.empresa_otorga
+			consulta =''
+			
+			if cliente_O.nombre != '':
+				consulta +='|Q(cliente__nombre__icontains 		= cliente_O.nombre)'
+			if cliente_O.city == None:
+				consulta +='|Q(cliente__city = cliente_O.city)'
+
+
 
 			if cliente_O.city == None:
 				creditosIguales = Credito.objects.filter(
-					(Q(cliente__nombre__icontains 		= cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
+					(Q(cliente__nombre__icontains 		= cliente_O.nombre) | Q(cliente__telefono__icontains = cliente_O.telefono))|
 					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_colonia)|
-					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_poblacion)|  
-					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
-					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)|
-					Q(empresa_otorga__gte 	= empresa_otorga1) & Q(empresa_otorga__lte = empresa_otorga2)|
-					Q(cliente__rfc 						= cliente_O.rfc)
-					).filter(liquidado = credito_O.liquidado)
+					Q(cliente__dir_poblacion__icontains 	= cliente_O.dir_poblacion)|  
+					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))
+					#Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)
+					#Q(empresa_otorga__gte 	= empresa_otorga1) & Q(empresa_otorga__lte = empresa_otorga2)
+					#Q(cliente__rfc 						= cliente_O.rfc)
+					)
+				#.filter(liquidado = credito_O.liquidado)
 					#.filter(fecha_limite__lte =  credito_O.fecha_limite)
 			else:
 				creditosIguales = Credito.objects.filter(
-					(Q(cliente__nombre__icontains 		= cliente_O.nombre) & Q(cliente__telefono__icontains = cliente_O.telefono))|
+					(Q(cliente__nombre__icontains 		= cliente_O.nombre) | Q(cliente__telefono__icontains = cliente_O.telefono))|
 					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_colonia)|
-					Q(cliente__dir_colonia__icontains 	= cliente_O.dir_poblacion)|  
-					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))|
-					Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)|
-					(Q(empresa_otorga__gte 	= empresa_otorga1) & Q(empresa_otorga__lte = empresa_otorga2))|
-					Q(cliente__rfc 						= cliente_O.rfc)
-					).filter(cliente__city = cliente_O.city).filter(liquidado = credito_O.liquidado)
+					Q(cliente__dir_poblacion__icontains 	= cliente_O.dir_poblacion)|  
+					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle)& (Q(cliente__dir_no_interior__icontains = cliente_O.dir_no_interior)| Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior)))
+					)
+
+			clientesIguales = Credito.objects.filter(consulta)
+			
+					#Q(cliente__codigo_postal__icontains = cliente_O.codigo_postal)
+					#(Q(empresa_otorga__gte 	= empresa_otorga1) & Q(empresa_otorga__lte = empresa_otorga2))
+					#Q(cliente__rfc 						= cliente_O.rfc)
+				#.filter(cliente__city = cliente_O.city).filter(liquidado = credito_O.liquidado)
 				#.filter(fecha_limite__lte =  credito_O.fecha_limite)
 			
 			if creditosIguales.count() > 1:
@@ -317,7 +332,7 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 		Cliente_form = ClientesBusquedaForm()
 		credito_form = CreditoForm()
 	
-	creditosIguales = creditosIguales.order_by('fecha_limite')
+	#creditosIguales = creditosIguales.order_by('fecha_limite')
 	paginator = Paginator(creditosIguales, 20) # Muestra 20 
 	page = request.GET.get('page')
 
@@ -344,6 +359,7 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
          	'fecha_limite'				: credito.fecha_limite,
          	'dias_atraso'		: str(datetime.now().toordinal() - fecha_limite.toordinal()),                  
          	'cantidad'			: credito.monto_total,
+         	'liquidado'			: credito.liquidado,
                  })
 
 	c = {'cliente_form':Cliente_form, 'creditos':creditosData, 'creditos_form':credito_form, 'msg':'', }

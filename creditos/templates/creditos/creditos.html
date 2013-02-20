@@ -24,28 +24,25 @@
         {{ cliente_form.telefono }}
       </div>
     </div>
-    <div class="span3" >
+    <!-- <div class="span3" >
       <label>RFC</label>
       {{ cliente_form.rfc }}
-    </div>
-    <div class="span3" style='clear:both;'>
+    </div> -->
+    <!-- <div class="span3" style='clear:both;'>
       <label>Empresa que otorga</label>
       {{ creditos_form.empresa_otorga }}
-    </div>
-    <div class="span3">
-      <label>Fecha de pago menor o igual que</label>
+    </div> -->
+    <!-- <div class="span3">
+      <label>Fecha de pago <small> menor o igual que</small></label>
       <div class="input-prepend input-append">
-        <span class="add-on">#</span>
+        <span class="add-on"><i class="icon-calendar"></i></span>
         {{ creditos_form.fecha_limite }}
-        <a class="btn " id='calendario'>
-          <i class="icon-calendar"></i>
-        </a>
       </div>
-    </div>
-    <div class="span3" >
+    </div> -->
+    <!-- <div class="span3" >
       <label>Liquidado</label>
       {{ creditos_form.liquidado }}
-    </div>
+    </div> -->
     <div style='clear:both;'>
       <hr>
     </div>
@@ -53,13 +50,13 @@
       <label>Ciudad</label>
       {{ cliente_form.city }}
     </div>
-    <div class="span3">
+    <!-- <div class="span3">
       <label>Codigo Postal</label>
       <div class="input-prepend input-append">
         <span class="add-on">#</span>
         {{ cliente_form.codigo_postal }}
       </div>
-    </div>
+    </div> -->
     <div class="span3">
       <label>Colonia</label>
       {{ cliente_form.dir_colonia }}
@@ -69,7 +66,7 @@
       {{ cliente_form.dir_poblacion }}
     </div>
     <div class="span3" style='clear:both;'>
-      <label>Calle</label>
+      <label>Calle o Campo</label>
       {{ cliente_form.dir_calle }}
     </div>
     <div class="span3" >
@@ -136,6 +133,7 @@
       <th>Fecha de pago</th>
       <th>Dias de atraso</th>
       <th>Cantidad</th>
+      <th>Liquidado</th>
     </tr>
 
     {% for credito in creditos %}
@@ -148,6 +146,13 @@
       <td>{{ credito.fecha_limite }}</td>
       <td class='dias_atraso'>{{ credito.dias_atraso }}</td>
       <td>{{ credito.cantidad }}</td>
+      <td>
+        {% if credito.liquidado %}
+          SI
+        {% else %}
+          NO
+        {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </table>
