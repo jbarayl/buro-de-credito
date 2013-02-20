@@ -22,10 +22,10 @@ class ClientesBusquedaForm(forms.ModelForm):
 	dir_colonia 	= forms.CharField(required=False)
 	dir_no_exterior = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
 	dir_no_interior = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
-	codigo_postal 	= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
+	#codigo_postal 	= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'5','class':'span1'}),required=False)
 	telefono 		= forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10'}), required=False)
 	dir_poblacion 	= forms.CharField(required=False)
-	rfc = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'13','class':'span2'}),required=False)
+	#rfc = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'13','class':'span2'}),required=False)
 	class Meta:
 		widgets = autocomplete_light.get_widgets_dict(Cliente)
 		model = Cliente
@@ -33,6 +33,8 @@ class ClientesBusquedaForm(forms.ModelForm):
 			'edad',
 			'ocupacion',
 			'institucion',
+			'rfc',
+			'codigo_postal',
 
 		}
 	
@@ -40,16 +42,20 @@ class CreditoForm(forms.ModelForm):
 	"""""
 		Permite hacer busquedas de de creditos basado en un conjunto de criterios
 	"""""
-	fecha_limite = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}),required=False)
+	#fecha_limite = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}),required=False)
 	class Meta:
 		model = Credito
 		exclude = {
 			'monto_total',
 			'cliente',
 			'fecha',
+			'empresa_otorga',
+			'fecha_limite',
+			'liquidado',
 		}
 	
 class CreditoManageForm(forms.ModelForm):
+	widgets = autocomplete_light.get_widgets_dict(Credito)
 	class Meta:
 		model = Credito
 
