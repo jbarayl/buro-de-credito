@@ -53,6 +53,7 @@ class CreditoForm(forms.ModelForm):
 			'empresa_otorga',
 			'fecha_limite',
 			'liquidado',
+			'empresa',
 		}
 	
 class CreditoManageForm(forms.ModelForm):

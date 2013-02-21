@@ -238,8 +238,8 @@ def ajax_View(request, id=None):
 def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	
 	creditosIguales = None
-	msg = '' 
-	
+	msg = ''
+
 	if request.method == 'POST':
 		Cliente_form = ClientesBusquedaForm(request.POST)
 
@@ -300,20 +300,32 @@ def credito_manageView(request, id = None, template_name='creditos/credito.html'
 		credito = Credito()
 
 	msg = '' 
+	error = False
+	try:
+		user_profile = UserProfile.objects.get(user=request.user)
+		empresa_usuario = user_profile.empresa
+	except Exception, e:
+		error = True	
 
 	if request.method == 'POST':
 		Credito_form = CreditoManageForm(request.POST, instance=credito)
 
 		if Credito_form.is_valid():
-			Credito_form.save()
+			credito_O =Credito_form.save(commit= False)
+			credito_O.empresa = empresa_usuario
+			credito_O.save()
+
 			return HttpResponseRedirect('/creditos/')
 	else:
 		if request.user.has_perm('creditos.add_credito'):
-			Credito_form = CreditoManageForm(instance=credito)
+			if not error:
+				Credito_form = CreditoManageForm(instance=credito)
+			else:
+				return HttpResponseRedirect('/error/')
 		else:
 			return HttpResponseRedirect('/creditos/')
 		
-	c = {'credito_form': Credito_form, }
+	c = {'credito_form': Credito_form, 'empresa_usuario': empresa_usuario,}
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
@@ -324,3 +336,8 @@ def credito_deleteView(request, id = None, template_name='creditos/creditos.html
 		credito.delete()
 
 	return HttpResponseRedirect('/creditos/')
+
+@login_required(login_url='/login/')
+def problema_View(request, template_name='index.html'):
+
+	return render_to_response(template_name, {}, context_instance=RequestContext(request))

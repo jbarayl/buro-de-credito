@@ -1,6 +1,7 @@
 #encoding:utf-8
 from django.db import models
 from datetime import datetime 
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Empresa(models.Model):
@@ -44,4 +45,8 @@ class Credito(models.Model):
 
 	def __unicode__(self):
 		return u'%s'% self.id
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    empresa = models.ForeignKey(Empresa)
 

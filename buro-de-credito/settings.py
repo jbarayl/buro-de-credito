@@ -115,6 +115,8 @@ TEMPLATE_DIRS = (
     os.path.join(RUTA_PROYECTO,'templates'),
 )
 
+#AUTH_PROFILE_MODULE = "creditos.UserProfile"
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
