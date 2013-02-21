@@ -25,8 +25,8 @@ class Cliente(models.Model):
 	dir_calle = models.CharField(max_length=100, blank=True, null=True)
 	dir_no_exterior = models.CharField(max_length=10, blank=True, null=True)
 	dir_no_interior = models.CharField(max_length=10, blank=True, null=True)
-	dir_colonia = models.CharField(max_length=100)
-	dir_poblacion = models.CharField(max_length=100)
+	dir_colonia = models.CharField(max_length=100, blank=True, null=True)
+	dir_poblacion = models.CharField(max_length=100, blank=True, null=True)
 	dir_referencia = models.CharField(max_length=100, blank=True, null=True)
 
 	telefono = models.CharField(default='', max_length=10, blank=True, null=True)
@@ -38,7 +38,7 @@ class Cliente(models.Model):
 
 class Credito(models.Model):
 	cliente = models.ForeignKey(Cliente)
-	empresa_otorga = models.ForeignKey(Empresa)
+	empresa_otorga = models.CharField(max_length=100, blank=True, null=True)
 	fecha = models.DateField()
 	fecha_limite = models.DateField()
 	monto_total = models.DecimalField(default=0, max_digits=15, decimal_places=2)
@@ -46,7 +46,7 @@ class Credito(models.Model):
 	def __unicode__(self):
 		return u'%s'% self.id
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User)
-    empresa = models.ForeignKey(Empresa)
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(User)
+#     empresa = models.ForeignKey(Empresa)
 

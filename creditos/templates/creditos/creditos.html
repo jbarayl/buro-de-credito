@@ -24,12 +24,14 @@
       <label>.</label>
       <div class="btn-group">
         <input type="submit" class="btn btn-primary" value="Buscar" />
+        {% if not user.is_anonymous %}
         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
           <li><a href="/credito/">Nuevo Credito</a></li>
         </ul>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -60,14 +62,15 @@
    <table class="table table-hover">
     <tr>
       <th>Nombre</th>
-      <th>Tel.</th>
-      <th>Ciudad</th>
-      <th>Localidad</th>
-      <th>Calle</th>
+      <th>Direccion</th>
+      <th>Calle o Campo</th>
+      <th>Otorgo Credito</th>
       <th>Fecha de pago</th>
       <th>Dias de atraso</th>
       <th>Cantidad</th>
+      {% if not user.is_anonymous %}
       <th></th>
+      {% endif %}
     </tr>
 
     {% for credito in creditos %}
@@ -86,17 +89,24 @@
       </div>
     </div>
     <tr>
-      <td><a href="/credito/{{ credito.id }}/">{{ credito.cliente_nombre }}</a></td>
-      <td>{{ credito.cliente_telefono }}</td>
+      <td>
+        {% if not user.is_anonymous %}
+          <a href="/credito/{{ credito.id }}/">{{ credito.cliente_nombre }}</a>
+        {% else %}
+          {{ credito.cliente_nombre }}
+        {% endif %}
+      </td>
       <td>{{ credito.cliente_city }}</td>
-      <td>{{ credito.cliente_localidad }}</td>
       <td>{{ credito.cliente_calle }} # {{ credito.cliente.dir_no_interior }}{{credito.cliente.dir_no_exterior}}</td>
+      <td>{{ credito.cliente_empresa_otorga }}</td>
       <td>{{ credito.fecha_limite }}</td>
       <td class='dias_atraso'>{{ credito.dias_atraso }}</td>
       <td>{{ credito.cantidad }}</td>
+      {% if not user.is_anonymous %}
       <td style="text-align:center;">
         <a href='#myModal{{ credito.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
       </td>
+      {% endif %}
     </tr>
     {% endfor %}
   </table>

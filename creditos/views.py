@@ -234,7 +234,7 @@ def ajax_View(request, id=None):
 ##										##
 ##########################################
 
-@login_required(login_url='/login/')
+#@login_required(login_url='/login/')
 def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	
 	creditosIguales = None
@@ -277,15 +277,19 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	creditosData = []
 	for credito in creditos:
 		fecha_limite = date(credito.fecha_limite.year, credito.fecha_limite.month, credito.fecha_limite.day)
+		dias_atraso = datetime.now().toordinal() - fecha_limite.toordinal()
+		
+		if dias_atraso < 0:
+			dias_atraso = 0
+
 		creditosData.append ({
 			'id':credito.id,
         	'cliente_nombre'	: credito.cliente.nombre,
-         	'cliente_telefono'	: credito.cliente.telefono,
-         	'cliente_city'		: credito.cliente.city,
-         	'cliente_localidad'	: '%s, %s'% (credito.cliente.dir_colonia, credito.cliente.dir_poblacion),
+         	'cliente_city'		: u'%s (%s)'% (credito.cliente.city, credito.cliente.dir_colonia),
          	'cliente_calle'		: '%s, %s %s'% (credito.cliente.dir_calle, credito.cliente.dir_no_interior, credito.cliente.dir_no_exterior),
+         	'cliente_empresa_otorga'	: credito.empresa_otorga,
          	'fecha_limite'				: credito.fecha_limite,
-         	'dias_atraso'		: str(datetime.now().toordinal() - fecha_limite.toordinal()),                  
+         	'dias_atraso'		: dias_atraso,                  
          	'cantidad'			: credito.monto_total,
                  })
 	
@@ -300,32 +304,21 @@ def credito_manageView(request, id = None, template_name='creditos/credito.html'
 		credito = Credito()
 
 	msg = '' 
-	error = False
-	try:
-		user_profile = UserProfile.objects.get(user=request.user)
-		empresa_usuario = user_profile.empresa
-	except Exception, e:
-		error = True	
 
 	if request.method == 'POST':
 		Credito_form = CreditoManageForm(request.POST, instance=credito)
 
 		if Credito_form.is_valid():
-			credito_O =Credito_form.save(commit= False)
-			credito_O.empresa = empresa_usuario
-			credito_O.save()
+			Credito_form.save()
 
 			return HttpResponseRedirect('/creditos/')
 	else:
 		if request.user.has_perm('creditos.add_credito'):
-			if not error:
 				Credito_form = CreditoManageForm(instance=credito)
-			else:
-				return HttpResponseRedirect('/error/')
 		else:
 			return HttpResponseRedirect('/creditos/')
 		
-	c = {'credito_form': Credito_form, 'empresa_usuario': empresa_usuario,}
+	c = {'credito_form': Credito_form,}
 
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 

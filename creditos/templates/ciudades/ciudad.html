@@ -7,6 +7,15 @@
 	{% csrf_token %}
 	{{ ciudad_form.errors }}
 	<div class="span3">
+		<label>Pais</label>
+		{{ ciudad_form.country }}
+		<br>
+	</div>
+	<div class="span3">
+		<label>Estado</label>
+		{{ ciudad_form.region }}
+	</div>
+	<div class="span3">
 		<label>Nombre</label>
 		{{ ciudad_form.name }}
 	</div>
@@ -14,15 +23,7 @@
 		<label>Nombre a Mostrar</label>
 		{{ ciudad_form.display_name }}
 	</div>
-	<div class="span3">
-		<label>Estado</label>
-		{{ ciudad_form.region }}
-	</div>
-	<div class="span3">
-		<label>Pais</label>
-		{{ ciudad_form.country }}
-		<br>
-	</div>
+	
 	<div class="span3" style='clear:both;'>
 		<label>Ternimos de Busqueda</label>
 		{{ ciudad_form.search_names }}

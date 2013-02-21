@@ -22,25 +22,26 @@
   
 </head>
 <body>
+  {% if not user.is_anonymous %}
   <div id="navbar-example" class="navbar navbar-static">
     <div class="navbar-inner">
       <div class="container" style="width: auto;">
-        <a class="brand" href="/"><i class="icon-home"></i></a>
         <ul class="nav" role="navigation">
           <li><a href="/"> <i class="icon-check"></i> Creditos</a></li>
           <li><a href="/clientes/?filtro="> <i class="icon-user"></i> Clientes</a></li>
           <li><a href="/ciudades/?filtro="> <i class="icon-globe"></i> Ciudades</a></li>
-          <li><a href="#" TARGET="_blank"> <i class="icon-question-sign"></i> Ayuda</a></li>
+          <!-- <li><a href="#" TARGET="_blank"> <i class="icon-question-sign"></i> Ayuda</a></li> -->
         </ul>
       </div>
     </div>
   </div>
+  {% endif %}
   <div id="breadcrumbs" style="margin-left: 35px;">
     <div class='span4'>
     {% block breadcrumb %}<a href="/"><i class="icon-home"></i></a>{% endblock %}
     </div>
     <div style="text-align:right; height:2em; margin-right: 2em;">
-      {% if user.username %}
+      {% if not user.is_anonymous %}
        {{ user.username }} <a class="btn btn-small btn-danger" href="/logout/">  Cerrar Sesión</a>
       {% else %}
         <a class="btn btn-small btn-success" href="/login/">Iniciar Sesión</a>

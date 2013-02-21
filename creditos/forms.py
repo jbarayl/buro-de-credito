@@ -67,7 +67,7 @@ class CreditoManageForm(forms.ModelForm):
 		exclude = {
 			'liquidado',
 		}
-
+		
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
 		model = City
