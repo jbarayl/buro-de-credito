@@ -256,9 +256,9 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 			creditosIguales = Credito.objects.filter(
 					Q(cliente__nombre__icontains 		= cliente_O.nombre) |
 					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle) &  Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior))
-					)
+					).order_by('fecha_limite')
 	else:
-		creditosIguales = Credito.objects.all()
+		creditosIguales = Credito.objects.all().order_by('fecha_limite')
 		Cliente_form = ClientesBusquedaForm()
 
 	paginator = Paginator(creditosIguales, 20) # Muestra 20 
@@ -275,6 +275,7 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	    creditos = paginator.page(paginator.num_pages)
 
 	creditosData = []
+
 	for credito in creditos:
 		fecha_limite = date(credito.fecha_limite.year, credito.fecha_limite.month, credito.fecha_limite.day)
 		dias_atraso = datetime.now().toordinal() - fecha_limite.toordinal()
@@ -286,7 +287,7 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 			'id':credito.id,
         	'cliente_nombre'	: credito.cliente.nombre,
          	'cliente_city'		: u'%s (%s)'% (credito.cliente.city, credito.cliente.dir_colonia),
-         	'cliente_calle'		: '%s, %s %s'% (credito.cliente.dir_calle, credito.cliente.dir_no_interior, credito.cliente.dir_no_exterior),
+         	'cliente_calle'		: '%s, # %s %s'% (credito.cliente.dir_calle, credito.cliente.dir_no_interior, credito.cliente.dir_no_exterior),
          	'cliente_empresa_otorga'	: credito.empresa_otorga,
          	'fecha_limite'				: credito.fecha_limite,
          	'dias_atraso'		: dias_atraso,                  
