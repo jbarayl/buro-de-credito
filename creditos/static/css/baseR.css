@@ -1,0 +1,41 @@
+
+.pagecontent
+{
+	background-color: rgba(255, 255, 255, 0.49);
+	text-align: left;
+	padding: 0em;
+	padding-top: 0em;
+	padding-bottom: 0em;
+	margin-left: 0em;
+	margin-right: 0em;
+}
+
+.mainmenu
+{
+	text-align: center;
+}
+
+.mainmenu th, .mainmenu td
+{
+	text-align: center;
+}
+
+.table th
+{
+	padding: 3px;
+}
+
+.table td
+{
+	padding: 0px;	
+}
+
+hr
+{
+	margin: 0px;
+}
+
+.reportable
+{
+	font-size: 8px;
+}

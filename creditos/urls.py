@@ -23,5 +23,6 @@ urlpatterns = patterns('',
     (r'^credito/$', views.credito_manageView),
     (r'^credito/(?P<id>\d+)/', views.credito_manageView),
     (r'^credito/delete/(?P<id>\d+)/', views.credito_deleteView),
+    (r'^creditos/Reporte/$', views.creditos_reporteView),
     #(r'^error/$', views.problema_View),
 )

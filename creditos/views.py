@@ -258,7 +258,8 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 					(Q(cliente__dir_calle__icontains 	= cliente_O.dir_calle) &  Q(cliente__dir_no_exterior__icontains = cliente_O.dir_no_exterior))
 					).order_by('fecha_limite')
 	else:
-		creditosIguales = Credito.objects.all().order_by('fecha_limite')
+		creditosIguales = Credito.objects.filter(cliente__nombre__icontains = '*'). filter(cliente__dir_calle__icontains = '*').filter(cliente__dir_no_exterior__icontains = '*').order_by('fecha_limite')
+
 		Cliente_form = ClientesBusquedaForm()
 
 	paginator = Paginator(creditosIguales, 20) # Muestra 20 
@@ -330,6 +331,31 @@ def credito_deleteView(request, id = None, template_name='creditos/creditos.html
 		credito.delete()
 
 	return HttpResponseRedirect('/creditos/')
+
+@login_required(login_url='/login/')
+def creditos_reporteView(request, template_name='creditos/reporte_creditos.html'):
+	creditos = Credito.objects.all()
+	creditosData = []
+	for credito in creditos:
+		fecha_limite = date(credito.fecha_limite.year, credito.fecha_limite.month, credito.fecha_limite.day)
+		dias_atraso = datetime.now().toordinal() - fecha_limite.toordinal()
+		
+		if dias_atraso < 0:
+			dias_atraso = 0
+
+		creditosData.append ({
+			'id':credito.id,
+        	'cliente_nombre'	: credito.cliente.nombre,
+         	'cliente_city'		: u'%s (%s)'% (credito.cliente.city, credito.cliente.dir_colonia),
+         	'cliente_calle'		: '%s, # %s %s'% (credito.cliente.dir_calle, credito.cliente.dir_no_interior, credito.cliente.dir_no_exterior),
+         	'cliente_empresa_otorga'	: credito.empresa_otorga,
+         	'fecha_limite'				: credito.fecha_limite,
+         	'dias_atraso'		: dias_atraso,                  
+         	'cantidad'			: credito.monto_total,
+                 })
+
+	c = {'creditos':creditosData,}
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 def problema_View(request, template_name='index.html'):

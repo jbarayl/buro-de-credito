@@ -1,0 +1,39 @@
+{% extends "baseR.html" %}
+{% block js_code %}
+ <script>  
+  $(document).ready(function() {
+    $(this).popup();
+  });
+  </script>
+{% endblock %}
+{% block title %}Reporte de Creditos{% endblock %}
+{% block content %}
+<div>
+	<h4 class='mainmenu'>REPORTE DE CREDITOS</h4>
+	<br>
+	<table  class="table table-bordered reportable">
+		<thead>
+		<tr class='mainmenu'>
+		    <th >NOMBRE</th>
+		    <th>DIRECCION</th>
+		    <th>OTORGA CREDITO</th>
+	      	<th>FECHA DE PAGO</th>
+	      	<th>DIAS DE ATRASO</th>
+	    	<th>CANTIDAD</th>
+    	</tr>
+    	</thead>
+    	<tbody>
+	{% for credito in creditos %}
+		<tr class='mainmenu'>
+			<td>{{ credito.cliente_nombre }}</td>
+		    <td>{{ credito.cliente_calle }}</td>
+		    <td>{{ credito.cliente_empresa_otorga }}</td>
+		    <td >{{ credito.fecha_limite.day }}/ {{ credito.fecha_limite.month }}/ {{ credito.fecha_limite.year }}</td>
+		    <td class='dias_atraso'>{{ credito.dias_atraso }}</td>
+		    <td>{{ credito.cantidad }}</td>
+		</tr>
+		</tbody>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}
