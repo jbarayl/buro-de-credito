@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Clientes SIC{% endblock %}
+{% block js_code %}
+<script>
+if (location.href.lastIndexOf('/') !=-1)
+  $(document).ready(function() {
+      var id = location.href.substr(location.href.lastIndexOf('/')+1);
+      $("#btnPrint").printPage();
+      $('#btnPrint').attr('href','/creditos/Reporte/cliente/'+ id);
+  });
+</script>
+{% endblock %}
 {% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a> > Cliente{% endblock %}
 {% block content %}
 <form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+<div class="form-actions mainmenu" style='clear:both;'>
+  <a class="btn btnPrint" href="/" id="btnPrint"><i class='icon-print'></i> Reporte de Creditos</a>
+</div>  
   <br>
 {% csrf_token %}
    {% if msg %}

@@ -33,14 +33,16 @@
   <div id="navbar-example" class="navbar navbar-static">
     <div class="navbar-inner">
       <div class="container" style="width: auto;">
-        {% if user.is_staff %}
         <ul class="nav" role="navigation">
-          <li><a href="/"> <i class="icon-check"></i> Creditos</a></li>
+          <li><a href="/creditos/"> <i class="icon-check"></i> Creditos</a></li>
+          {% if user.is_staff %}
           <li><a href="/clientes/?filtro="> <i class="icon-user"></i> Clientes</a></li>
           <li><a href="/ciudades/?filtro="> <i class="icon-globe"></i> Ciudades</a></li>
           <li><a class='Reporte' href="/creditos/Reporte/"> <i class="icon-file"></i> Reporte Creditos</a></li>
+          {% endif %}
+          <li><a href="/"> <i class="icon-info-sign"></i> Informacion</a></li>
         </ul>
-        {% endif %}
+        
         <ul class="nav pull-right">
          <div id=" span breadcrumbs" style="margin-left: 35px;">
           <div class ='span'style="text-align:right; height:2em; margin-right: 2em;">

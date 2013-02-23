@@ -116,6 +116,8 @@
       </td>
       {% endif %}
     </tr>
+    {% empty %}
+    <tr class='mainmenu' ><td colspan='9'><p class="text-info">No se encontraron datos para este filtro, Por favor intenta con otro filtro!</p><td></tr>
     {% endfor %}
   </table>
   <br>  

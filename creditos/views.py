@@ -44,7 +44,7 @@ def ingresar(request):
 			if acceso is not None:
 				if acceso.is_active:
 					login(request, acceso)
-					return HttpResponseRedirect('/')
+					return HttpResponseRedirect('/creditos/')
 				else:
 					return render_to_response('noactivo.html', context_instance=RequestContext(request))
 			else:
@@ -359,6 +359,34 @@ def creditos_reporteView(request, template_name='creditos/reporte_creditos.html'
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
-def problema_View(request, template_name='index.html'):
+def creditoscliente_reporteView(request, id=None, template_name='creditos/reporte_creditos_cliente.html'):
+	creditos = Credito.objects.filter(cliente__id = id)
+	creditosData = []
+	for credito in creditos:
+		fecha_limite = date(credito.fecha_limite.year, credito.fecha_limite.month, credito.fecha_limite.day)
+		dias_atraso = datetime.now().toordinal() - fecha_limite.toordinal()
+		
+		if dias_atraso < 0:
+			dias_atraso = 0
+
+		creditosData.append ({
+			'id':credito.id,
+        	'cliente_nombre'	: credito.cliente.nombre,
+         	'cliente_city'		: u'%s (%s)'% (credito.cliente.city, credito.cliente.dir_colonia),
+         	'cliente_calle'		: '%s, # %s %s'% (credito.cliente.dir_calle, credito.cliente.dir_no_interior, credito.cliente.dir_no_exterior),
+         	'cliente_empresa_otorga'	: credito.empresa_otorga,
+         	'fecha_limite'				: credito.fecha_limite,
+         	'dias_atraso'		: dias_atraso,                  
+         	'cantidad'			: credito.monto_total,
+                 })
+
+	cliente = None
+	if creditosData !=  []:
+		cliente = creditos[0].cliente
+
+	c = {'creditos':creditosData,'cliente':cliente}
+	return render_to_response(template_name, c , context_instance=RequestContext(request))
+
+def index_View(request, template_name='index.html'):
 
 	return render_to_response(template_name, {}, context_instance=RequestContext(request))
