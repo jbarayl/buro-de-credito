@@ -20,7 +20,7 @@
         {{ cliente_form.dir_no_exterior}}
       </div>
     </div>
-    <div class="span1">
+    <div class="span2">
       <label>.</label>
       <div class="btn-group">
         <input type="submit" class="btn btn-primary" value="Buscar" />
@@ -34,6 +34,12 @@
         {% endif %}
       </div>
     </div>
+    {% if user.is_staff %}
+     <div class="span3">
+      <label>.</label>
+      <a class='btn Reporte' href="/creditos/Reporte/"> <i class="icon-file"></i> Reporte Creditos</a>
+    </div>
+    {% endif %}
   </div>
   {% if msg %}
   <div class="alert alert-block alert-error fade in">
