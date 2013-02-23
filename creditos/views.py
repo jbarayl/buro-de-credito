@@ -234,7 +234,7 @@ def ajax_View(request, id=None):
 ##										##
 ##########################################
 
-#@login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def creditosView(request, id = None, template_name='creditos/creditos.html'):
 	
 	creditosIguales = None
@@ -293,6 +293,7 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
          	'fecha_limite'				: credito.fecha_limite,
          	'dias_atraso'		: dias_atraso,                  
          	'cantidad'			: credito.monto_total,
+         	'liquidado'			: credito.liquidado,
                  })
 	
 	c = {'cliente_form':Cliente_form, 'creditos':creditosData,  'msg':msg, }

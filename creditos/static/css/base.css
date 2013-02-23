@@ -80,3 +80,13 @@ hr
 {
 	font-size: 12px;
 }
+
+.mainmenu th, .mainmenu td
+{
+	text-align: center;
+}
+
+table 
+{
+	font-size: .9em;
+}

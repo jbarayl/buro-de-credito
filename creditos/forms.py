@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
 
 from cities_light.models import City
+from django.utils.formats import get_format
+my_formats = get_format('DATETIME_INPUT_FORMATS')
+
 
 class ClienteManageForm(forms.ModelForm):
 	
@@ -57,9 +60,9 @@ class CreditoForm(forms.ModelForm):
 	
 class CreditoManageForm(forms.ModelForm):
 	#widgets = autocomplete_light.get_widgets_dict(Credito)
-	fecha = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
-	fecha_limite = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
-	#fecha_liquidacion = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
+	fecha = forms.DateField(widget=forms.DateInput(attrs={'maxlength':'10','class':'span2'}))
+	fecha_limite = forms.DateField(widget=forms.DateInput(attrs={'maxlength':'10','class':'span2'}))
+	fecha_liquidacion = forms.DateField(widget=forms.DateInput(attrs={'maxlength':'10','class':'span2'}),required=False)
 	monto_total = forms.CharField(widget=forms.TextInput(attrs={'class':'span1'}))
 	monto_liquidado = forms.CharField(widget=forms.TextInput(attrs={'class':'span1'}))
 	class Meta:

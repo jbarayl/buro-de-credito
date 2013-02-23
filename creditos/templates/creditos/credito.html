@@ -3,16 +3,15 @@
 {% block js_code %}
 <script>
   $(function() {
-    $( "#id_fecha_limite" ).datepicker({dateFormat:'yy-mm-dd',});
-    $( "#id_fecha" ).datepicker({dateFormat:'yy-mm-dd',});
-    $( "#id_fecha_liquidacion" ).datepicker({dateFormat:'yy-mm-dd',});
+    $( "#id_fecha_limite" ).datepicker({dateFormat:'dd/mm/yy',});
+    $( "#id_fecha" ).datepicker({dateFormat:'dd/mm/yy',});
+    $( "#id_fecha_liquidacion" ).datepicker({dateFormat:'dd/mm/yy',});
     
-    if ($(this).is(':checked'))
+    if ($('#id_liquidado').is(':checked'))
       { $('#span_fecha_liquido, #span_monto_liquidado').show();}
     else
       { 
         $('#span_fecha_liquido, #span_monto_liquidado').hide();
-        alert('hola');
       }
 
     $('#id_liquidado').click(function() {
@@ -23,6 +22,8 @@
         else
         {
           $('#span_fecha_liquido, #span_monto_liquidado').hide();
+          $('#id_monto_liquidado').val(0);
+          $('#id_fecha_liquidacion').val('');
         }
     });
   });

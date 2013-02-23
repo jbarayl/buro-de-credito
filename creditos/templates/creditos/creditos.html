@@ -24,7 +24,7 @@
       <label>.</label>
       <div class="btn-group">
         <input type="submit" class="btn btn-primary" value="Buscar" />
-        {% if not user.is_anonymous %}
+        {% if user.is_staff %}
         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
           <span class="caret"></span>
         </button>
@@ -60,14 +60,15 @@
   {{ cliente_form.errors }}
   <div style='clear:both;'> 
    <table class="table table-hover">
-    <tr>
-      <th>Nombre</th>
-      <th>Direccion</th>
-      <th>Calle o Campo</th>
-      <th>Otorgo Credito</th>
-      <th>Fecha de pago</th>
-      <th>Dias de atraso</th>
-      <th>Cantidad</th>
+    <tr class='mainmenu'>
+      <th>NOMBRE</th>
+      <th>DIRECCION</th>
+      <th>CALLE O CAMPO</th>
+      <th>OTORGA CREDITO</th>
+      <th>FECHA LIMITE</th>
+      <th>DIAS DE ATRASO</th>
+      <th>CANTIDAD</th>
+      <th>LIQUIDADO</th>
       {% if not user.is_anonymous %}
       <th></th>
       {% endif %}
@@ -88,7 +89,7 @@
         <a href="/credito/delete/{{ credito.id }}/" class="btn btn-primary">Estoy Seguro</a>
       </div>
     </div>
-    <tr>
+    <tr class='mainmenu'>
       <td>
         {% if not user.is_anonymous %}
           <a href="/credito/{{ credito.id }}/">{{ credito.cliente_nombre }}</a>
@@ -99,9 +100,16 @@
       <td>{{ credito.cliente_city }}</td>
       <td>{{ credito.cliente_calle }}</td>
       <td>{{ credito.cliente_empresa_otorga }}</td>
-      <td style='text-align:right; padding-right:3em;'>{{ credito.fecha_limite }}</td>
-      <td class='dias_atraso'>{{ credito.dias_atraso }}</td>
+      <td>{{ credito.fecha_limite }}</td>
+      <td>{{ credito.dias_atraso }}</td>
       <td>{{ credito.cantidad }}</td>
+      <td>
+        {% if credito.liquidado %}
+          SI
+        {% else %}
+          NO
+        {% endif %}
+      </td>
       {% if not user.is_anonymous %}
       <td style="text-align:center;">
         <a href='#myModal{{ credito.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
