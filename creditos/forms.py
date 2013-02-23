@@ -52,7 +52,6 @@ class CreditoForm(forms.ModelForm):
 			'fecha',
 			'empresa_otorga',
 			'fecha_limite',
-			'liquidado',
 			'empresa',
 		}
 	
@@ -60,13 +59,11 @@ class CreditoManageForm(forms.ModelForm):
 	#widgets = autocomplete_light.get_widgets_dict(Credito)
 	fecha = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
 	fecha_limite = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
+	#fecha_liquidacion = forms.CharField(widget=forms.TextInput(attrs={'maxlength':'10','class':'span2'}))
 	monto_total = forms.CharField(widget=forms.TextInput(attrs={'class':'span1'}))
-	
+	monto_liquidado = forms.CharField(widget=forms.TextInput(attrs={'class':'span1'}))
 	class Meta:
 		model = Credito
-		exclude = {
-			'liquidado',
-		}
 		
 class CiudadManageForm(forms.ModelForm):
 	class Meta:

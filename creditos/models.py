@@ -2,6 +2,7 @@
 from django.db import models
 from datetime import datetime 
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # Create your models here.
 class Empresa(models.Model):
@@ -42,6 +43,9 @@ class Credito(models.Model):
 	fecha = models.DateField()
 	fecha_limite = models.DateField()
 	monto_total = models.DecimalField(default=0, max_digits=15, decimal_places=2)
+	liquidado = models.BooleanField(default=False)
+	fecha_liquidacion = models.DateField(blank=True, null=True)
+	monto_liquidado = models.DecimalField(default=0, max_digits=15, decimal_places=2)
 
 	def __unicode__(self):
 		return u'%s'% self.id
