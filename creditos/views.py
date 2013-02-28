@@ -28,7 +28,7 @@ from django.db import connection
 
 ##########################################
 ## 										##
-##               LOGIN     			    ##
+##              USUARIOS  			    ##
 ##										##
 ##########################################
 
@@ -57,6 +57,67 @@ def ingresar(request):
 def logoutUser(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+def usuarios_View(request, template_name='usuarios/usuarios.html'):
+	usuarios = User.objects.all()
+	
+	paginator = Paginator(usuarios, 20) # Muestra 5 inventarios por pagina
+	page = request.GET.get('page')
+
+	#####PARA PAGINACION##############
+	try:
+		usuarios = paginator.page(page)
+	except PageNotAnInteger:
+	    # If page is not an integer, deliver first page.
+	    usuarios = paginator.page(1)
+	except EmptyPage:
+	    # If page is out of range (e.g. 9999), deliver last page of results.
+	    usuarios = paginator.page(paginator.num_pages)
+
+	c = {'usuarios':usuarios,}
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+def usuario_manageView(request, id=None, template_name='usuarios/usuario.html'):
+	nuevousuario = False
+	if id:
+		usuario = get_object_or_404(User, pk=id)
+	else:
+		nuevousuario = True
+		usuario = User()
+	
+	if request.method == 'POST':
+		if nuevousuario:
+			usuario_form =RegisterForm(request.POST, request.FILES, instance=usuario)
+		else:			
+			usuario_form =UsarioChangeForm(request.POST, request.FILES, instance=usuario)
+
+		if usuario_form.is_valid():
+			if request.user.has_perm('creditos.change_user'):
+				usuario_form.save()
+			return HttpResponseRedirect('/usuarios/')
+	else:
+		if nuevousuario:
+			if request.user.has_perm('creditos.add_user'):
+				usuario_form = RegisterForm(instance= usuario)
+			else:	
+				return HttpResponseRedirect('/usuarios/')
+		else:
+			if request.user.has_perm('creditos.change_user'):
+				usuario_form =UsarioChangeForm(instance=usuario)
+			else:	
+				return HttpResponseRedirect('/usuarios/')	
+
+	c = {'usuario_form':usuario_form,}
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def usuario_deleteView(request, id = None):
+	if request.user.has_perm('creditos.delete_user'):
+		usuario = get_object_or_404(User, pk=id)
+		usuario.delete()
+
+	return HttpResponseRedirect('/usuarios/')
 
 ##########################################
 ## 										##

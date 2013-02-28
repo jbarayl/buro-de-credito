@@ -12,5 +12,5 @@ admin.autodiscover()
 urlpatterns = patterns('',
 	 url(r'', include('creditos.urls', namespace='creditos')),
     url(r'autocomplete/', include('autocomplete_light.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    #url(r'^admin/', include(admin.site.urls)),
 )

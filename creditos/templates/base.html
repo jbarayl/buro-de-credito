@@ -37,8 +37,8 @@
           <li><a href="/creditos/"> <i class="icon-check"></i> Creditos</a></li>
           {% if user.is_staff %}
           <li><a href="/clientes/?filtro="> <i class="icon-user"></i> Clientes</a></li>
-          <li><a href="/ciudades/?filtro="> <i class="icon-globe"></i> Ciudades</a></li>
           <!-- <li><a class='Reporte' href="/creditos/Reporte/"> <i class="icon-file"></i> Reporte Creditos</a></li> -->
+          <li><a tabindex="-1" href="/ciudades/?filtro="><i class="icon-globe"></i>Ciudades</a></li>
           {% endif %}
           <li><a href="/"> <i class="icon-info-sign"></i> Informacion</a></li>
         </ul>
@@ -54,6 +54,20 @@
           </div>
         </div>
       </ul>
+      {% if user.is_staff %}
+      <ul class="nav pull-right">
+        <div id=" span breadcrumbs" >
+          <div class ='span'style="text-align:right; height:2em;">
+            <li class="dropdown">
+              <a id="drop1" href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown"> <i class="icon-cog"></i> Sistema <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="drop1" style='text-align:left;'>
+                <li><a tabindex="-1" href="/usuarios/">Usuarios</a></li>
+              </ul>
+            </li>
+          </div>
+        </div>
+      </ul>
+      {% endif %}
       </div>
     </div>
   </div>
