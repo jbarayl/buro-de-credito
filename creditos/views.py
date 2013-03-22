@@ -60,6 +60,9 @@ def logoutUser(request):
 
 
 def usuarios_View(request, template_name='usuarios/usuarios.html'):
+	if not request.user.is_staff:
+		return HttpResponseRedirect('/creditos/')
+		
 	usuarios = User.objects.all()
 	
 	paginator = Paginator(usuarios, 20) # Muestra 5 inventarios por pagina
@@ -113,9 +116,15 @@ def usuario_manageView(request, id=None, template_name='usuarios/usuario.html'):
 
 @login_required(login_url='/login/')
 def usuario_deleteView(request, id = None):
+	#para crear un superusuario
+	# user = get_object_or_404(User, username='bccomercial')
+	# user.is_staff = True
+	# user.save()
+
 	if request.user.has_perm('creditos.delete_user'):
 		usuario = get_object_or_404(User, pk=id)
-		usuario.delete()
+		if not usuario.username == 'bccomercial':
+			usuario.delete()
 
 	return HttpResponseRedirect('/usuarios/')
 
@@ -127,6 +136,7 @@ def usuario_deleteView(request, id = None):
 
 @login_required(login_url='/login/')
 def cliente_manageView(request, id = None, template_name='clientes/cliente.html'):
+
 	if id:
 		cliente = get_object_or_404(Cliente, pk=id)
 	else:
@@ -164,7 +174,9 @@ def cliente_manageView(request, id = None, template_name='clientes/cliente.html'
 
 @login_required(login_url='/login/')
 def clientesView(request, id = None, template_name='clientes/clientes.html'):
-	
+	if not request.user.is_staff:
+		return HttpResponseRedirect('/creditos/')
+
 	clientesIguales = None
 	msg = '' 
 	if request.method == 'POST':
@@ -245,6 +257,9 @@ def ciudad_manageView(request, id = None, template_name='ciudades/ciudad.html'):
 
 @login_required(login_url='/login/')
 def ciudades_View(request, template_name='ciudades/ciudades.html'):
+	if not request.user.is_staff:
+		return HttpResponseRedirect('/creditos/')
+
 	try: 
 		filtro = request.GET['filtro']
 	except:
@@ -372,7 +387,7 @@ def credito_manageView(request, id = None, template_name='creditos/credito.html'
 	if request.method == 'POST':
 		Credito_form = CreditoManageForm(request.POST, instance=credito)
 
-		if Credito_form.is_valid():
+		if Credito_form.is_valid() and request.user.has_perm('creditos.edit_credito'):
 			Credito_form.save()
 
 			return HttpResponseRedirect('/creditos/')

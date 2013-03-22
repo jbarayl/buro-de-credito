@@ -55,9 +55,9 @@ class UsarioChangeForm(forms.ModelForm):
         	if user.is_staff:
         		user.is_superuser = True
         		
-        	if user.username == 'admin':
+        	if user.username == 'bccomercial':
         		user.is_staff = True
-
+        		user.is_superuser = True
 
         	user.save()
         return user

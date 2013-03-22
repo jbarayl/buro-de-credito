@@ -34,6 +34,9 @@ South es una app de django que permite modificar la estructura de la base de dat
 El comando syncdb sólo crea nuevas tablas, pero no modifica tablas existentes, así que si en el modelo de una aplicación renombramos un campo de una tabla existente syncdb no realizará ese cambio en la base de datos. A este tipo de cambios en la base de datos se les denomina “migración del esquema” y es de lo que se encarga South.
 
 Instalación
+
+SOLO: pip install -r requirements.txt
+
 pip install south
 Agregar “south” a INSTALLED_APPS
 Ejecutar syncdb antes de crear nuestros propios modelos. Está será la última (y única) vez, que necesitamos ejecutar este comando

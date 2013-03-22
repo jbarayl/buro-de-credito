@@ -75,7 +75,7 @@
       <th>DIAS DE ATRASO</th>
       <th>CANTIDAD</th>
       <th>LIQUIDADO</th>
-      {% if not user.is_anonymous %}
+      {% if user.is_staff %}
       <th></th>
       {% endif %}
     </tr>
@@ -97,7 +97,7 @@
     </div>
     <tr class='mainmenu'>
       <td>
-        {% if not user.is_anonymous %}
+        {% if user.is_staff %}
           <a href="/credito/{{ credito.id }}/">{{ credito.cliente_nombre }}</a>
         {% else %}
           {{ credito.cliente_nombre }}
@@ -116,7 +116,7 @@
           NO
         {% endif %}
       </td>
-      {% if not user.is_anonymous %}
+      {% if user.is_staff %}
       <td style="text-align:center;">
         <a href='#myModal{{ credito.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
       </td>
