@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Clientes SIC{% endblock %}
+{% block js_code %}
+<script>
+if (location.href.lastIndexOf('/') !=-1)
+  $(document).ready(function() {
+      var id = location.href.substr(location.href.lastIndexOf('/')+1);
+      $("#btnPrint").printPage();
+      $('#btnPrint').attr('href','/creditos/Reporte/cliente/'+ id);
+  });
+</script>
+{% endblock %}
 {% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a> > Cliente{% endblock %}
 {% block content %}
-<form method="post" class="form-horizontal mainmenu" action="" width="300px"  enctype='multipart/form-data'>
+<form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+<div class="form-actions mainmenu" style='clear:both;'>
+  <a class="btn btnPrint" href="/" id="btnPrint"><i class='icon-print'></i> Reporte de Creditos</a>
+</div>  
+  <br>
 {% csrf_token %}
-  <div class="form-actions mainmenu">
-	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
-  </div>
    {% if msg %}
   <div class="alert alert-block alert-error fade in">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -20,13 +31,74 @@
   </div>
   <div class="span3">
     <label>Edad</label>
-    {{ cliente_form.edad }}
+    <div class="input-prepend input-append">
+      <span class="add-on">#</span>
+      {{ cliente_form.edad }}
+    </div>
+  </div>
+  <div class="span3">
+    <label>Codigo Postal</label>
+    <div class="input-prepend input-append">
+      <span class="add-on">#</span>
+      {{ cliente_form.codigo_postal }}
+    </div>
+  </div>
+  <div class="span3" style='clear:both;'>
+    <label>RFC</label>
+    {{ cliente_form.rfc }}
+  </div>
+  <div class="span3">
+    <label>Telefono</label>
+    <div class="input-prepend input-append">
+      <span class="add-on">#</span>
+      {{ cliente_form.telefono }}
+    </div>
+  </div>
+  <div class="span3">
+    <label>Ocupacion</label>
+    {{ cliente_form.ocupacion }}
+  </div>
+  <div style='clear:both;'>
+    <hr>
+  </div>
+  <div class="span3" style='clear:both;'>
+    <label>Ciudad</label>
+    {{ cliente_form.city }}
+  </div>
+  <div class="span3">
+    <label>Colonia</label>
+    {{ cliente_form.dir_colonia }}
+  </div>
+  <div class="span3">
+    <label>Poblacion</label>
+    {{ cliente_form.dir_poblacion }}
+  </div>
+   <div class="span3" style='clear:both;'>
+    <label>Calle o Campo</label>
+    {{ cliente_form.dir_calle }}
+  </div>
+  <div class="span3" >
+    <label>No Exterior</label>
+    <div class="input-prepend input-append">
+      <span class="add-on">#</span>
+      {{ cliente_form.dir_no_exterior}}
+    </div>
+  </div>
+  <div class="span3">
+    <label>No Interior</label>
+    <div class="input-prepend input-append">
+      <span class="add-on">#</span>
+      {{ cliente_form.dir_no_interior }}
+    </div>
+  </div>
+  <div class="span3" style='clear:both;'>
+    <label>Referencia</label>
+    {{ cliente_form.dir_referencia }}
   </div>
   {{ cliente_form.errors }}
 
-  {{ cliente_form.as_p }}
   
-  <div class="form-actions">
+  <div class="form-actions mainmenu" style='clear:both;'>
 	<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
   </div>
 </form>

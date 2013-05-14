@@ -1,5 +1,4 @@
 import autocomplete_light
-import autocomplete_light
 
 from cities_light.models import City
 from models import Cliente

@@ -1,0 +1,45 @@
+{% extends "baseR.html" %}
+{% block js_code %}
+ <script>  
+  $(document).ready(function() {
+    $(this).popup();
+  });
+  </script>
+{% endblock %}
+{% block title %}Reporte de Creditos {% endblock %}
+{% block content %}
+<div>
+	<h4 class='mainmenu'>REPORTE DE CREDITOS DE {{ cliente.nombre|upper }}</h4>
+	<br>
+	<table  class="table table-bordered reportable">
+		<thead>
+		<tr class='mainmenu'>
+		    <th>OTORGO CREDITO</th>
+	      	<th>FECHA DE PAGO</th>
+	      	<th>DIAS DE ATRASO</th>
+	    	<th>CANTIDAD</th>
+	    	<th>LIQUIDADO</th>
+    	</tr>
+    	</thead>
+    	<tbody>
+	{% for credito in creditos %}
+		<tr class='mainmenu'>
+		    <td>{{ credito.cliente_empresa_otorga }}</td>
+		    <td >{{ credito.fecha_limite.day }}/ {{ credito.fecha_limite.month }}/ {{ credito.fecha_limite.year }}</td>
+		    <td class='dias_atraso'>{{ credito.dias_atraso }}</td>
+		    <td>{{ credito.cantidad }}</td>
+		    <td>
+		        {% if credito.liquidado %}
+		          SI
+		        {% else %}
+		          NO
+		        {% endif %}
+      		</td>
+		</tr>
+		{% empty %}
+		<tr class='mainmenu' ><td colspan='9'><p class="text-info" style="font-size:'2em;">El cliente no tiene creditos</p></td></tr>
+		</tbody>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}

@@ -3,22 +3,32 @@ from django.views import generic
 from creditos import views
 
 urlpatterns = patterns('',
-	(r'^$', views.index),
+	(r'^$', views.index_View),
     #LOGIN
     url(r'^login/$',views.ingresar),
     url(r'^logout/$', views.logoutUser),
-    #buro-de-credito
-    (r'^compra/$', views.compra_manageView),
-    (r'^compra/(?P<id>\d+)/', views.compra_manageView),
     #clientes
-    (r'^clientes/$', views.clientes_View),
+    (r'^clientes/$', views.clientesView),
     (r'^cliente/$', views.cliente_manageView),
-    (r'^cliente/(?P<id>\d+)/', views.cliente_manageView),
+    (r'^cliente/(?P<id>\d+)', views.cliente_manageView),
     (r'^cliente/delete/(?P<id>\d+)/', views.clientes_deleteView),
     #Ciudades
     (r'^ciudades/$', views.ciudades_View),
     (r'^ciudad/$', views.ciudad_manageView),
     (r'^ciudad/(?P<id>\d+)/', views.ciudad_manageView),
-    (r'^ajax/$', views.ajax_View),
-
+    (r'^ciudad/delete/(?P<id>\d+)/', views.ciudad_deleteView),
+    #(r'^ajax/$', views.ajax_View),
+    #Creditos
+    (r'^creditos/$', views.creditosView),
+    (r'^credito/$', views.credito_manageView),
+    (r'^credito/(?P<id>\d+)/', views.credito_manageView),
+    (r'^credito/delete/(?P<id>\d+)/', views.credito_deleteView),
+    (r'^creditos/Reporte/$', views.creditos_reporteView),
+    (r'^creditos/Reporte/cliente/(?P<id>\d+)/$', views.creditoscliente_reporteView),
+    #(r'^error/$', views.problema_View),
+    #Usuarios
+    (r'^usuarios/$', views.usuarios_View),
+    (r'^usuario/$', views.usuario_manageView),
+    (r'^usuario/(?P<id>\d+)$', views.usuario_manageView),
+    (r'^usuario/delete/(?P<id>\d+)/', views.usuario_deleteView),
 )

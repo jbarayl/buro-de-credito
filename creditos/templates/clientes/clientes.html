@@ -1,54 +1,106 @@
-	{% extends "base.html" %}
-	{% block title %}Inicio{% endblock %}
-	{% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a>{% endblock %}
-	{% block content %}
-	<div class="form-actions mainmenu">
-		<form action="/" method="get">
-			<div class="input-append">
-				<input id="id_filtro" name="filtro" class="span5" type="text" value="{{ filtro }}" placeholder="Nombre de cliente, Sucursal, Estado de la cliente"/>
-				<button class="btn btn-primary" type="submit" name="_btn" value=""><i class="icon-search"></i></button>
-				<a class="btn btn-success" href="/cliente/"><i class='icon-plus-sign'></i></a>
-			</div>
-			<small class='muted'>Búsqueda avanzada
-			</small>
-			<a class="" href="/cliente/" rel="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="Popover on top">
-				<i class='icon-plus-sign'></i>
-			</a>
-		</form>
-	</div>
-	<table class="table table-hover">
-		<tr>
-			<th style="width: 400px;">Id</th>
-			<th>Nombre</th>
-			<th>Direccion</th>
-			<th>Adeuda</th>
-			<th>Acciones</th>
-		</tr>
-		{% for cliente in clientes %}
-		<div id="myModal{{ cliente.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 id="myModalLabel">Seguro que Deseas Eliminar</h3>
-			</div>
-			<div class="modal-body">
-				<h4>Al eliminar este cliente</h4>
-				<p style="color:red;">Ya no sera posible recuperar sus datos de nuevo</p>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal">Cancelar</button>
-				<a href="/cliente/delete/{{ cliente.id }}/" class="btn btn-primary">Estoy Seguro</a>
-			</div>
-		</div>
-		<tr>
-			<td><a href="/cliente/{{ cliente.id }}/">{{ cliente.id }}</a></td>
-			<td>{{ cliente.nombre }}</td>
-			<td>{{ cliente.city }}</td>
-			<td>{{ cliente.adeudo }}</td>
-			<td style="text-align:center;">
-        		<a href='#myModal{{ cliente.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
-      		</td>
-		</tr>
-		{% endfor %}
-	</table>
-
-	{% endblock %}
+{% extends "base.html" %}
+{% block title %}Clientes SIC{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="/clientes/">Clientes</a> {% endblock %}
+{% block content %}
+<form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+  {% csrf_token %}
+  <div class="form-actions">
+    <div class="span3">
+      <label>Nombre</label>
+      {{ cliente_form.nombre }}
+    </div>
+    <div class="span3">
+      <label>Calle</label>
+      {{ cliente_form.dir_calle }}
+    </div>
+    <div class="span2" >
+      <label>No Exterior</label>
+      <div class="input-prepend input-append">
+        <span class="add-on">#</span>
+        {{ cliente_form.dir_no_exterior}}
+      </div>
+    </div>
+    <div class="span2">
+      <label>.</label>
+      <div class="btn-group">
+        <input type="submit" class="btn btn-primary" value="Buscar" />
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu"><!-- 
+          <li><a href="#"></a></li>
+          <li class="divider"></li> -->
+          <li><a href="/cliente/">Nuevo Cliente</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% if msg %}
+  <div class="alert alert-block alert-error fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 class="alert-heading"></h4>
+    <p>{{ msg }}</p>
+  </div>
+  {% endif %}
+  <div class="pagination pagination-mini mainmenu">
+      <ul>
+        {% if clientesIguales.has_previous %}
+        <li><a href="?page={{ clientesIguales.previous_page_number }}">Anterior</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">Anterior</a></li>
+        {% endif %}
+        <li class="disabled"><a href="#">Pagina {{ clientesIguales.number }} de {{ clientesIguales.paginator.num_pages }}.</a></li>
+        {% if clientesIguales.has_next %}
+        <li><a href="?page={{ ciudades.next_page_number }}">Siguiente</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">Siguiente</a></li>
+        {% endif %} 
+      </ul>
+    </div>
+  {{ cliente_form.errors }}
+  <div style='clear:both;'> 
+   <table class="table table-hover">
+    <tr>
+      <th>Nombre</th>
+      <th>Tel.</th>
+      <th>Ciudad</th>
+      <th>Cod. Postal</th>
+      <th>Localidad</th>
+      <th>Calle</th>
+      <th>Referencia</th>
+      <th></th>
+    </tr>
+    {% for cliente in clientesIguales %}
+    <div id="myModal{{ cliente.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="myModalLabel">Seguro que Deseas Eliminar</h3>
+      </div>
+      <div class="modal-body">
+        <h4>Al eliminar este cliente</h4>
+        <p style="color:red;">Se eliminaran todos los creditos que este cliente tenga asociado</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal">Close</button>
+        <a href="/cliente/delete/{{ cliente.id }}/" class="btn btn-primary">Estoy Seguro</a>
+      </div>
+    </div>
+    <tr>
+      <td><a href="/cliente/{{ cliente.id }}">{{ cliente.nombre }}</a></td>
+      <td>{{ cliente.telefono }}</td>
+      <td>{{ cliente.city }}</td>
+      <td>{{ cliente.codigo_postal }}</td>
+      <td>{{ cliente.dir_colonia }}, {{ cliente.dir_poblacion }}</td>
+      <td>{{ cliente.dir_calle }} # {{ cliente.dir_no_interior }}{{cliente.dir_no_exterior}}</td>
+      <td>{{ cliente.dir_referencia }}</td>
+      <td style="text-align:center;">
+        <a href='#myModal{{ cliente.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>  
+</div>
+</form>
+{% include 'autocomplete_light/static.html' %}
+{% endblock %}

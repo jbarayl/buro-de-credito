@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Credito SIC{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="/creditos/">Creditos</a> {% endblock %}
+{% block content %}
+<form method="post" class="" action="" width="300px"  enctype='multipart/form-data'>
+  {% csrf_token %}
+  <div class="form-actions">
+    <div class="span3">
+      <label>Cliente</label>
+      {{ cliente_form.nombre }}
+    </div>
+    <div class="span3">
+      <label>Calle o Campo</label>
+      {{ cliente_form.dir_calle }}
+    </div>
+    <div class="span2" >
+      <label>No Exterior</label>
+      <div class="input-prepend input-append">
+        <span class="add-on">#</span>
+        {{ cliente_form.dir_no_exterior}}
+      </div>
+    </div>
+    <div class="span2">
+      <label>.</label>
+      <div class="btn-group">
+        <input type="submit" class="btn btn-primary" value="Buscar" />
+        {% if user.is_staff %}
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="/credito/">Nuevo Credito</a></li>
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+    {% if user.is_staff %}
+     <div class="span3">
+      <label>.</label>
+      <a class='btn Reporte' href="/creditos/Reporte/"> <i class="icon-file"></i> Reporte Creditos</a>
+    </div>
+    {% endif %}
+  </div>
+  {% if msg %}
+  <div class="alert alert-block alert-error fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 class="alert-heading">Direccion Repetida</h4>
+    <p>{{ msg }}</p>
+  </div>
+  {% endif %}
+  <div class="pagination pagination-mini mainmenu">
+      <ul>
+        {% if creditos.has_previous %}
+        <li><a href="?page={{ creditos.previous_page_number }}">Anterior</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">Anterior</a></li>
+        {% endif %}
+        <li class="disabled"><a href="#">Pagina {{ creditos.number }} de {{ creditos.paginator.num_pages }}.</a></li>
+        {% if creditos.has_next %}
+        <li><a href="?page={{ creditos.next_page_number }}">Siguiente</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">Siguiente</a></li>
+        {% endif %} 
+      </ul>
+    </div>
+  {{ cliente_form.errors }}
+  <div style='clear:both;'> 
+   <table class="table table-hover">
+    <tr class='mainmenu'>
+      <th>NOMBRE</th>
+      <th>DIRECCION</th>
+      <th>CALLE O CAMPO</th>
+      <th>OTORGA CREDITO</th>
+      <th>FECHA LIMITE</th>
+      <th>DIAS DE ATRASO</th>
+      <th>CANTIDAD</th>
+      <th>LIQUIDADO</th>
+      {% if user.is_staff %}
+      <th></th>
+      {% endif %}
+    </tr>
+
+    {% for credito in creditos %}
+    <div id="myModal{{ credito.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="myModalLabel">Seguro que Deseas Eliminar</h3>
+      </div>
+      <div class="modal-body">
+        <h4>Al eliminar esta credito</h4>
+        <p style="color:red;">Ya no sera posible recuperar sus datos de nuevo</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal">Close</button>
+        <a href="/credito/delete/{{ credito.id }}/" class="btn btn-primary">Estoy Seguro</a>
+      </div>
+    </div>
+    <tr class='mainmenu'>
+      <td>
+        {% if user.is_staff %}
+          <a href="/credito/{{ credito.id }}/">{{ credito.cliente_nombre }}</a>
+        {% else %}
+          {{ credito.cliente_nombre }}
+        {% endif %}
+      </td>
+      <td>{{ credito.cliente_city }}</td>
+      <td>{{ credito.cliente_calle }}</td>
+      <td>{{ credito.cliente_empresa_otorga }}</td>
+      <td>{{ credito.fecha_limite }}</td>
+      <td>{{ credito.dias_atraso }}</td>
+      <td>{{ credito.cantidad }}</td>
+      <td>
+        {% if credito.liquidado %}
+          SI
+        {% else %}
+          NO
+        {% endif %}
+      </td>
+      {% if user.is_staff %}
+      <td style="text-align:center;">
+        <a href='#myModal{{ credito.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
+      </td>
+      {% endif %}
+    </tr>
+    {% empty %}
+    <tr class='mainmenu' ><td colspan='9'><p class="text-info">No se encontraron datos para este filtro, Por favor intenta con otro filtro!</p><td></tr>
+    {% endfor %}
+  </table>
+  <br>  
+</div>
+</form>
+{% include 'autocomplete_light/static.html' %}
+{% endblock %}
