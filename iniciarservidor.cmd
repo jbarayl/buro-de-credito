@@ -12,4 +12,4 @@ echo.
 
 
 cd C:\Users\Admin\Documents\GitHub\buro-de-credito
-python manage.py runserver 192.168.1.208:80
+manage.py runserver 192.168.1.208:8000
