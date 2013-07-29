@@ -21,7 +21,7 @@ class Cliente(models.Model):
 	rfc = models.CharField(default='', null=True, blank=True, max_length=13)
 	#DIRECCION
 	city = models.ForeignKey('cities_light.city', on_delete=models.SET_NULL, null=True, blank=True)
-	codigo_postal = models.CharField(max_length=5)
+	codigo_postal = models.CharField(max_length=5, null=True, blank=True)
 	#Domicilio
 	dir_calle = models.CharField(max_length=100, blank=True, null=True)
 	dir_no_exterior = models.CharField(max_length=10, blank=True, null=True)
