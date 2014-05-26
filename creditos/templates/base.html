@@ -38,9 +38,19 @@
           {% if user.is_staff %}
           <li><a href="/clientes/?filtro="> <i class="icon-user"></i> Clientes</a></li>
           <!-- <li><a class='Reporte' href="/creditos/Reporte/"> <i class="icon-file"></i> Reporte Creditos</a></li> -->
-          <li><a tabindex="-1" href="/ciudades/?filtro="><i class="icon-globe"></i>Ciudades</a></li>
+         
           {% endif %}
           <li><a href="/"> <i class="icon-info-sign"></i> Informacion</a></li>
+          <div class ='span'style="height:2em;">
+          <li class="dropdown">
+              <a id="drop1" href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown"> <i class="icon-th-large"></i> Otros <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                <li><a tabindex="-1" href="/ciudades/?filtro="><i class="icon-road"></i> Ciudades</a></li>
+                <li><a tabindex="-1" href="/estados/"><i class="icon-flag"></i> Estados</a></li>
+                <li><a tabindex="-1" href="/paises/"><i class="icon-globe"></i> Paises</a></li>
+              </ul>
+            </li>
+          <div>
         </ul>
         
         <ul class="nav pull-right">

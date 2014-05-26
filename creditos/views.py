@@ -7,7 +7,7 @@ from models import *
 from forms import *
 #MODELOS DE EL PROYECTO DE CITIES_LIGHT
 
-from cities_light.models import City
+from cities_light.models import City, Country, Region
 from datetime import datetime, date
 
 from django.db.models import Q
@@ -256,6 +256,56 @@ def ciudad_manageView(request, id = None, template_name='ciudades/ciudad.html'):
 	return render_to_response(template_name, c, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+def pais_manageView(request, id = None, template_name='pais/pais.html'):
+	if id:
+		pais = get_object_or_404(Country, pk=id)
+	else:
+		pais = Country()
+
+	if request.method == 'POST':
+		pais_form = PaisManageForm(request.POST, request.FILES, instance=pais)
+
+		if pais_form.is_valid():
+			if request.user.has_perm('creditos.change_country'):
+				pais_form.save()
+			
+			return HttpResponseRedirect('/paises/')
+	else:
+		if request.user.has_perm('creditos.add_country'):
+			pais_form = PaisManageForm(instance=pais)
+		else:
+			return HttpResponseRedirect('/paises/')
+
+	c = {'pais_form': pais_form, }
+
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def estado_manageView(request, id = None, template_name='estados/estado.html'):
+	if id:
+		estado = get_object_or_404(Region, pk=id)
+	else:
+		estado = Region()
+
+	if request.method == 'POST':
+		form = EstadoManageForm(request.POST, request.FILES, instance=estado)
+
+		if form.is_valid():
+			if request.user.has_perm('creditos.change_state'):
+				form.save()
+			
+			return HttpResponseRedirect('/estados/')
+	else:
+		if request.user.has_perm('creditos.add_state'):
+			form = EstadoManageForm(instance=estado)
+		else:
+			return HttpResponseRedirect('/estados/')
+
+	c = {'form': form, }
+
+	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 def ciudades_View(request, template_name='ciudades/ciudades.html'):
 	if not request.user.is_staff:
 		return HttpResponseRedirect('/creditos/')
@@ -281,6 +331,70 @@ def ciudades_View(request, template_name='ciudades/ciudades.html'):
 
 	c = {'ciudades':ciudades,'filtro':filtro,'msg':ciudades.count}
   	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def estados_View(request, template_name='estados/estados.html'):
+	if not request.user.is_staff:
+		return HttpResponseRedirect('/creditos/')
+
+	
+	estados_list = Region.objects.all()
+
+	paginator = Paginator(estados_list, 20) # Muestra 5 inventarios por pagina
+	page = request.GET.get('page')
+
+	#####PARA PAGINACION##############
+	try:
+		estados = paginator.page(page)
+	except PageNotAnInteger:
+	    # If page is not an integer, deliver first page.
+	    estados = paginator.page(1)
+	except EmptyPage:
+	    # If page is out of range (e.g. 9999), deliver last page of results.
+	    estados = paginator.page(paginator.num_pages)
+
+	c = {'estados':estados,'msg':estados.count}
+  	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def estado_deleteView(request, id = None):
+	if request.user.has_perm('creditos.delete_region'):
+		estado = get_object_or_404(Region, pk=id)
+		estado.delete()
+
+	return HttpResponseRedirect('/estados/')
+
+@login_required(login_url='/login/')
+def paises_View(request, template_name='pais/paises.html'):
+	if not request.user.is_staff:
+		return HttpResponseRedirect('/creditos/')
+
+	
+	paises_list = Country.objects.all()
+
+	paginator = Paginator(paises_list, 20) # Muestra 5 inventarios por pagina
+	page = request.GET.get('page')
+
+	#####PARA PAGINACION##############
+	try:
+		paises = paginator.page(page)
+	except PageNotAnInteger:
+	    # If page is not an integer, deliver first page.
+	    paises = paginator.page(1)
+	except EmptyPage:
+	    # If page is out of range (e.g. 9999), deliver last page of results.
+	    paises = paginator.page(paginator.num_pages)
+
+	c = {'paises':paises,'msg':paises.count}
+  	return render_to_response(template_name, c, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def pais_deleteView(request, id = None):
+	if request.user.has_perm('creditos.delete_country'):
+		pais = get_object_or_404(Country, pk=id)
+		pais.delete()
+
+	return HttpResponseRedirect('/paises/')
 
 @login_required(login_url='/login/')
 def ciudad_deleteView(request, id = None, template_name='ciudades/ciudades.html'):

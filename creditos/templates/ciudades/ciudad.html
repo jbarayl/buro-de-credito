@@ -7,12 +7,12 @@
 	{% csrf_token %}
 	{{ ciudad_form.errors }}
 	<div class="span3">
-		<label>Pais</label>
+		<label>Pais</label><a href="/pais/" target="_blank"><i class="icon-plus-sign "></i></a>
 		{{ ciudad_form.country }}
 		<br>
 	</div>
 	<div class="span3">
-		<label>Estado</label>
+		<label>Estado</label><a href="/estado/" target="_blank"><i class="icon-plus-sign "></i></a>
 		{{ ciudad_form.region }}
 	</div>
 	<div class="span3">

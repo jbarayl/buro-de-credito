@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}pais SIC{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="/pais/">pais</a> > Estado{% endblock %}
+{% block content %}
+<form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>
+	<br>
+	{% csrf_token %}
+	{{ pais_form.errors }}
+	<div class="span3">
+		<label>Nombre</label>
+		{{ pais_form.name }}
+	</div>
+	<div class="span3">
+		<label>Continente</label>
+		{{ pais_form.continent }}
+	</div>
+	
+	<br style='clear:both;'>
+	<div class="form-actions mainmenu" style='clear:both;'>
+		<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
+	</div>
+</form>
+
+{% endblock %}

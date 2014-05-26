@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Estado SIC{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="/estado/">estado</a> > Estado{% endblock %}
+{% block content %}
+<form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>
+	<br>
+	{% csrf_token %}
+	{{ form.errors }}
+	<div class="span3">
+		<label>Nombre</label>
+		{{ form.name }}
+	</div>
+	<div class="span3">
+		<label>Nombre a mostrar</label>
+		{{ form.display_name }}
+	</div>
+	<div class="span3">
+		<label>Pais</label>
+		{{ form.country }}
+	</div>
+	
+	<br style='clear:both;'>
+	<div class="form-actions mainmenu" style='clear:both;'>
+		<input type="submit" class="btn btn-primary" value="Guardar y Salir" />
+	</div>
+</form>
+
+{% endblock %}

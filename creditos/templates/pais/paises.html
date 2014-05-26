@@ -1,0 +1,52 @@
+	{% extends "base.html" %}
+	{% block title %}Inicio{% endblock %}
+	{% block breadcrumb %}{{ block.super }} <a href="/paises/">paises</a>{% endblock %}
+	{% block content %}
+	<div class="form-actions mainmenu">
+		<a class="btn btn-success" href="/pais/"><i class='icon-plus-sign'></i> Nuevo</a>
+	</div>
+	<table class="table table-hover">
+		<tr>
+			<th>Nombre</th>
+			<th></th>
+		</tr>
+		{% for pais in paises %}
+		<div id="myModal{{ pais.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 id="myModalLabel">Seguro que Deseas Eliminar</h3>
+			</div>
+			<div class="modal-body">
+				<h4>Al eliminar esta pais</h4>
+				<p style="color:red;">Ya no sera posible recuperar sus datos de nuevo</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">Close</button>
+				<a href="/pais/delete/{{ pais.id }}/" class="btn btn-primary">Estoy Seguro</a>
+			</div>
+		</div>
+		<tr>
+			<td><a href="/pais/{{ pais.id }}/">{{ pais.name }}</a></td>
+			<td style="text-align:center;">
+				<a href='#myModal{{ pais.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
+			</td>
+		</tr>
+		{% endfor %}
+		<div class="pagination pagination-mini mainmenu">
+			<ul>
+				{% if paises.has_previous %}
+				<li><a href="?page={{ paises.previous_page_number }}">Anterior</a></li>
+				{% else %}
+				<li class="disabled"><a href="#">Anterior</a></li>
+				{% endif %}
+				<li class="disabled"><a href="#">Pagina {{ paises.number }} de {{ paises.paginator.num_pages }}.</a></li>
+				{% if paises.has_next %}
+				<li><a href="?page={{ paises.next_page_number }}">Siguiente</a></li>
+				{% else %}
+				<li class="disabled"><a href="#">Siguiente</a></li>
+				{% endif %} 
+			</ul>
+		</div>
+	</table>
+	<br>	
+	{% endblock %}

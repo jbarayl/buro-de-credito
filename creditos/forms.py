@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Authenti
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
 
 
-from cities_light.models import City
+from cities_light.models import City, Country, Region
 from django.utils.formats import get_format
 my_formats = get_format('DATETIME_INPUT_FORMATS')
 
@@ -115,6 +115,30 @@ class CreditoManageForm(forms.ModelForm):
 class CiudadManageForm(forms.ModelForm):
 	class Meta:
 		model = City
+		exclude = (
+			'latitude',
+			'longitude',
+			'alternate_names',
+			'geoname_id',
+			'name_ascii',
+			)
+
+class PaisManageForm(forms.ModelForm):
+	class Meta:
+		model = Country
+		exclude = (
+			'latitude',
+			'code2',
+			'code3',
+			'tld',
+			'longitude',
+			'alternate_names',
+			'geoname_id',
+			'name_ascii',
+			)
+class EstadoManageForm(forms.ModelForm):
+	class Meta:
+		model = Region
 		exclude = (
 			'latitude',
 			'longitude',
