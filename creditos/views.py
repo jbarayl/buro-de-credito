@@ -309,7 +309,7 @@ def estado_manageView(request, id = None, template_name='estados/estado.html'):
 def ciudades_View(request, template_name='ciudades/ciudades.html'):
 	if not request.user.is_staff:
 		return HttpResponseRedirect('/creditos/')
-
+	
 	try: 
 		filtro = request.GET['filtro']
 	except:

@@ -10,6 +10,7 @@ echo 			==================================
 echo.
 echo.
 
-
+cd C:\MY_ENVS\buro-de-credito\Scripts
+activate
 cd C:\Users\Admin\Documents\GitHub\buro-de-credito
-python manage.py runserver 192.168.1.208:8000
+python manage.py runserver 0.0.0.0:8000
