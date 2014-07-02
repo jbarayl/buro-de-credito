@@ -18,7 +18,7 @@ class Empresa(models.Model):
 class Cliente(models.Model):
 	nombre = models.CharField(max_length=40)
 	edad = models.CharField(default='', max_length=3)
-	rfc = models.CharField(default='', null=True, blank=True, max_length=13)
+	rfc = models.CharField(default='', null=True, blank=True, max_length=18)
 	#DIRECCION
 	city = models.ForeignKey('cities_light.city', on_delete=models.SET_NULL, null=True, blank=True)
 	codigo_postal = models.CharField(max_length=5, null=True, blank=True)
@@ -30,7 +30,7 @@ class Cliente(models.Model):
 	dir_poblacion = models.CharField(max_length=100, blank=True, null=True)
 	dir_referencia = models.CharField(max_length=100, blank=True, null=True)
 
-	telefono = models.CharField(default='', max_length=10, blank=True, null=True)
+	telefono = models.CharField(default='', max_length=18, blank=True, null=True)
 
 	ocupacion = models.CharField(max_length=30, blank=True, null=True)
 	
