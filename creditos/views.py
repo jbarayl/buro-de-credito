@@ -484,6 +484,7 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
          	'dias_atraso'		: dias_atraso,                  
          	'cantidad'			: credito.monto_total,
          	'liquidado'			: credito.liquidado,
+         	'cliente_dir_referencia': credito.cliente.dir_referencia,
                  })
 	
 	c = {'cliente_form':Cliente_form, 'creditos':creditosData,  'msg':msg, }

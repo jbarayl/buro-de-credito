@@ -75,7 +75,7 @@
       <th>DIAS DE ATRASO</th>
       <th>CANTIDAD</th>
       <th>LIQUIDADO</th>
-      <th>REF</th>
+      <th>REFERENCIA</th>
       {% if user.is_staff %}
       <th></th>
       {% endif %}
@@ -110,7 +110,6 @@
       <td>{{ credito.fecha_limite }}</td>
       <td>{{ credito.dias_atraso }}</td>
       <td>{{ credito.cantidad }}</td>
-      <td>{{ credito.cliente.dir_referencia }}</td>
       <td>
         {% if credito.liquidado %}
           SI
@@ -119,6 +118,7 @@
         {% endif %}
       </td>
       {% if user.is_staff %}
+      <td>{{ credito.cliente_dir_referencia }}</td>
       <td style="text-align:center;">
         <a href='#myModal{{ credito.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
       </td>
