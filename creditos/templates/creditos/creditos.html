@@ -75,6 +75,7 @@
       <th>DIAS DE ATRASO</th>
       <th>CANTIDAD</th>
       <th>LIQUIDADO</th>
+      <th>REF</th>
       {% if user.is_staff %}
       <th></th>
       {% endif %}
@@ -109,6 +110,7 @@
       <td>{{ credito.fecha_limite }}</td>
       <td>{{ credito.dias_atraso }}</td>
       <td>{{ credito.cantidad }}</td>
+      <td>{{ credito.cliente.referencia }}</td>
       <td>
         {% if credito.liquidado %}
           SI
