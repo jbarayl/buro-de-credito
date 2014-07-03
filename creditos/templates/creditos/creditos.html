@@ -117,8 +117,8 @@
           NO
         {% endif %}
       </td>
-      {% if user.is_staff %}
       <td>{{ credito.cliente_dir_referencia }}</td>
+      {% if user.is_staff %}
       <td style="text-align:center;">
         <a href='#myModal{{ credito.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a>
       </td>
