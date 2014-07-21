@@ -474,6 +474,9 @@ def creditosView(request, id = None, template_name='creditos/creditos.html'):
 		if dias_atraso < 0:
 			dias_atraso = 0
 
+		if credito.liquidado:
+			dias_atraso = datetime.now().toordinal() - credito.fecha_liquidacion.toordinal()
+
 		creditosData.append ({
 			'id':credito.id,
         	'cliente_nombre'	: credito.cliente.nombre,
